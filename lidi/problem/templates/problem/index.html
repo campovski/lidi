@@ -1,0 +1,71 @@
+<html>
+
+{% load static %}
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial scale=1">
+	<title>Lidi - Problems</title>
+</head>
+<body>
+	<div id="header">
+		<ul>
+			<li><a href="{% url 'home:index' %}">Home</a></li>
+			<li id="current"><a href="{% url 'problem:index' %}">Problems</a></li>
+			<li><a href="">Statistics</a></li>
+			{% if user %}
+				<li><a href="{% url 'upload:upload' %}">Upload</a></li>
+				<li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
+			{% else %}
+				<li><a href="{% url 'login:index' %}">Login</a></li>
+				<li><a href="{% url 'signup:index' %}">Sign Up</a></li>
+			{% endif %}
+		</ul>
+	</div>
+
+	<div id="content">
+		<div id="pagination">
+			<span class="page_control">
+				{% if problems.has_previous %}
+					<a href="?page={{ problems.previous_page_number }}">Previous</a>
+				{% endif %}
+
+				<span class="current_page">
+					<b>{{ problems.number }}</b> / {{ problems.paginator.num_pages }}
+				</span>
+
+				{% if problems.has_next %}
+					<a href="?page={{ problems.next_page_number }}">Next</a>
+				{% endif %}
+			</span>
+		</div>
+		<div id="problems">
+			<table>
+				<tr>
+					<th><a href="{% url 'problem:index' page=problems.number sort_by='id' %}">ID</a></th>
+					<th><a href="{% url 'problem:index' page=problems.number sort_by='name' %}">Name</a></th>
+					<th><a href="{% url 'problem:index' page=problems.number sort_by='difficulty' %}">Difficulty</a></th>
+				<tr>
+				{% for problem in problems %}
+				<tr>
+                                        <th><a href="{% url 'problem:detail' problem.id %}">{{ problem.id }}</a></th>
+					<th><a href="{% url 'problem:detail' problem.id %}">{{ problem.name }}</a></th>
+					<th>{{ problem.difficulty }}</th>
+				</tr>
+			{% endfor %}
+			</table>
+		</div>
+	</div>
+
+	<div id="footer">
+
+	</div>
+</body>
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,26 @@
+<html>
+<head>
+	<meta charsef="utf-8">
+	<title>LIDI.COM -- Problem {{ problem.id }}</title>
+</head>
+<body>
+	<div id="header">
+
+	</div>
+	<div id="content">
+		<div class="problem_name">
+			Problem {{ problem.id }}: {{ problem.name }}
+		</div>
+		<div class="problem_desc">
+			{{ problem.desc }}
+		</div>
+	</div>
+	<div id="upload_solution">
+		<form enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+			{{ form }}
+			<input type="submit">Submit</input>
+		</form>
+	</div>
+</body>
+</html>
