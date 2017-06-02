@@ -36,8 +36,11 @@ def detail(request, problem_id=2):
 		form = UploadSolutionForm(request.POST, request.FILES)
 		if form.is_valid():
 			try:
-				handle_solution(request.FILES['f'], problem_id, request.session['user'], "C")
-				return HttpResponse("File uploaded succesfully... Grading...")
+				if request.session['user'] != None:
+					grade = handle_solution(request.FILES['f'], problem_id, request.session['user'], "C")
+					return HttpResponse("Grade = {0}".format(grade))
+				else:
+					return HttpResponse("Please login")
 			except KeyError:
 				return HttpResponse("Please login")
 	else:

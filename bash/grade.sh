@@ -9,9 +9,9 @@ proglang=$2;
 
 count=0;
 
-problem_dir=$LIDI_FILES_UPLOADED/$user/$problem;
+problem_dir=$CG_FILES_UPLOADED/$user/$problem;
 mkdir -p $problem_dir;
-cp $LIDI_FILES_UPLOADED/$file $problem_dir/$file; 
+cp $CG_FILES_UPLOADED/$file $problem_dir/$file; 
 
 case $extension in
 	c)
@@ -23,9 +23,9 @@ case $extension in
 
 		for i in 0 1 2 3 4 5 6 7 8 9
 		do
-		        $problem_dir/$filename < $LIDI_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
+		        $problem_dir/$filename < $CG_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-        		cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+        		cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
 		done;;
 
 	cpp)
@@ -37,9 +37,9 @@ case $extension in
 
 		for i in 0 1 2 3 4 5 6 7 8 9
 		do
-		        $problem_dir/$filename < $LIDI_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
+		        $problem_dir/$filename < $CG_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-			cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+			cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
 		done;;
 
 	py)
@@ -49,16 +49,16 @@ case $extension in
 		then
 			for i in 0 1 2 3 4 5 6 7 8 9
 			do
-				python3 $problem_dir/$file < $LIDI_FILES_TESTCASES/${problem}_${i} > $program_dir/out_${filename}_${i};
+				python3 $problem_dir/$file < $CG_FILES_TESTCASES/${problem}_${i} > $program_dir/out_${filename}_${i};
 				
-				cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+				cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
 			done;
 		else
 			for i in 0 1 2 3 4 5 6 7 8 9
                         do
-                                python $problem_dir/$file < $LIDI_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
+                                python $problem_dir/$file < $CG_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-                                cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+                                cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
                         done;
 		fi;
 
@@ -68,18 +68,18 @@ case $extension in
 		fpc -vw $problem_dir/$file;
 		for i in 0 1 2 3 4 5 6 7 8 9
 		do
-			$problem_dir/$filename < $LIDI_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
+			$problem_dir/$filename < $CG_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-			cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+			cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
 		done;;
 
 	f)
 		g77 $problem_dir/$file -o $problem_dir/$filename;
 		for i in 0 1 2 3 4 5 6 7 8 9
 		do
-			$problem_dir/$filename < $LIDI_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
+			$problem_dir/$filename < $CG_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-			cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+			cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
 		done;;
 
 	java)
@@ -91,9 +91,9 @@ case $extension in
 
 		for i in 0 1 2 3 4 5 6 7 8 9
 		do
-			java -cp $problem_dir $main_class < $LIDI_FILES_TESTCASES_SOL/${problem}_${i} > $problem_dir/out_${filename}_${i};
+			java -cp $problem_dir $main_class < $CG_FILES_TESTCASES_SOL/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-			cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
+			cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++));
 		done;;
 
 	cs)
@@ -101,9 +101,9 @@ case $extension in
 
 		for i in 0 1 2 3 4 5 6 7 8 9
 		do
-			mono $problem_dir/${filename}.exe < $LIDI_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
+			mono $problem_dir/${filename}.exe < $CG_FILES_TESTCASES/${problem}_${i} > $problem_dir/out_${filename}_${i};
 
-			cmp --silent $problem_dir/out_${filename}_${i} $LIDI_FILES_TESTCASES_SOL/${problem}_${i} && ((count++))
+			cmp --silent $problem_dir/out_${filename}_${i} $CG_FILES_TESTCASES_SOL/${problem}_${i} && ((count++))
 		done;;
 
 	*)

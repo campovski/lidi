@@ -15,17 +15,17 @@ sudo apt-get update;
 sudo apt-get install mono-complete;
 
 # Export directory names
-bash ./export_vars.sh;
+source ./export_vars.sh $1;
+source /home/$(whoami)/.bashrc;
 
 # Install chroot utils
 sudo apt-get install dchroot debootstrap;
 
 # Make directories for files.
-mkdir -p $LIDI_FILES_DIR;
-mkdir $LIDI_FILES_PROBLEMS;
-mkdir $LIDI_FILES_PROBLEMS_TMP;
-mkdir $LIDI_FILES_TESTCASES;
-mkdir $LIDI_FILES_TESTCASES_SOL;
-mkdir $LIDI_FILES_SOLUTIONS;
-mkdir $LIDI_FILES_UPLOADED;
-mkdir $LIDI_FILES_UPLOADED_BIN;
+mkdir -p $CG_FILES_DIR;
+mkdir $CG_FILES_PROBLEMS;
+mkdir $CG_FILES_PROBLEMS_TMP;
+mkdir $CG_FILES_TESTCASES;
+mkdir $CG_FILES_TESTCASES_SOL;
+mkdir $CG_FILES_SOLUTIONS;
+mkdir $CG_FILES_UPLOADED;
