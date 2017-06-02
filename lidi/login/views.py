@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import LoginForm
 from .support import validate_login
+from lidi.settings import BASE_HTTP_ADDRESS
 
 def index(request):
 	if request.method == 'POST':
@@ -12,7 +13,7 @@ def index(request):
 			username = validate_login(user, pwd)
 			if username:
 				request.session['user'] = username
-				return redirect('http://127.0.0.1:8000')
+				return redirect(BASE_HTTP_ADDRESS)
 			else:
 				return HttpResponse("Wrong username or password")
 	else:
@@ -21,4 +22,4 @@ def index(request):
 
 def logout(request):
 	request.session['user'] = None
-	return redirect('http://127.0.0.1:8000')
+	return redirect(BASE_HTTP_ADDRESS)
