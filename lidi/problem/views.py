@@ -12,12 +12,12 @@ def index(request, page=1, sort_by='id'):
 		return HttpResponse("Empty db")
 	
 	try:
-		user = request.session['user']
+		request.session['user']
 	except KeyError:
-		user = None
+		request.session['user'] = None
 
 	if page == 0:
-		return render(request, 'problem/index.html', { 'problems': all_problems, 'user': user })
+		return render(request, 'problem/index.html', { 'problems': all_problems, 'user': request.session['user'] })
 
 	paginator = Paginator(all_problems, 100)
 	try:
@@ -27,22 +27,24 @@ def index(request, page=1, sort_by='id'):
 	except EmptyPage:
 		problems = paginator.page(paginator.num_pages)
 	
-	return render(request, 'problem/index.html', { 'problems': problems, 'user': user })
+	return render(request, 'problem/index.html', { 'problems': problems, 'user': request.session['user'] })
 
 def detail(request, problem_id=2):
 	problem = Problem.objects.filter(pk=problem_id)[0]
+
+	try:
+		request.session['user']
+	except KeyError:
+		request.session['user'] = None
 	
 	if request.method == 'POST':
 		form = UploadSolutionForm(request.POST, request.FILES)
 		if form.is_valid():
-			try:
-				if request.session['user'] != None:
-					grade = handle_solution(request.FILES['f'], problem_id, request.session['user'], "C")
-					return HttpResponse("Grade = {0}".format(grade))
-				else:
-					return HttpResponse("Please login")
-			except KeyError:
+			if request.session['user'] != None:
+				grade = handle_solution(request.FILES['f'], problem_id, request.session['user'], "C")
+				return HttpResponse("Grade = {0}".format(grade))
+			else:
 				return HttpResponse("Please login")
 	else:
 		form = UploadSolutionForm()
-	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form })
+	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'] })

@@ -1,0 +1,117 @@
+#page {
+	max-width: 1280px;
+	padding-top: 60px;
+	margin: 0 auto;
+}
+
+#problems {
+	max-width: 80%;
+	margin: 0 auto;
+	overflow-x: auto;
+	padding-top: 1%;
+}
+
+#pagination {
+	max-width: 80%;
+	margin: 0 auto;
+	text-align: center;
+	padding: 1% 0;
+}
+
+#pagination a {
+	text-decoration: none;
+	color: #000000;
+	margin: 0 4%;
+}
+
+#pagination a:hover {
+	text-decoration: underline;
+	color: #606060;
+}
+
+#pagination b {
+	
+}
+
+table {
+	width: 80%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+th, td {
+	height: 30px;
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+}
+
+th {
+	background-color: #f4e242;
+	font-style: bold;
+}
+
+td.id {
+	text-align: center;
+	width: 20px;
+}
+
+td.name {
+	text-align: left;
+}
+
+td.diff {
+	text-align: center;
+	width: 30px;
+}
+
+th a, td a {
+	display: block;
+	text-decoration: none;
+	color: black;
+}
+
+tr a:hover, td a:hover {
+	text-decoration: underline;
+}
+
+tr:nth-child(odd) {
+	background-color: #fff5d8;
+}
+
+tr:hover {
+	background-color: #fff496;
+}
+
+
+
+/*--- STYLE FOR PROBLEM DETAIL --*/
+
+#content_problem {
+        width: 80%;
+        margin: 0 auto;
+        text-align: justify;
+        background-color: #fff496;
+}
+
+.problem_name h2 {
+        padding: 20px 20px 0 20px;
+}
+
+.problem_desc p {
+        padding: 20px;
+}
+
+#upload_solution {
+	max-width: 200px;
+	margin: 10px auto;
+}
+
+input[type=submit] {
+	margin-top: 4px;
+	background-color: #fff496;
+	padding: 4px 0;
+	width: 100%;
+	text-decoration: none;
+	color: black;
+	cursor: pointer;
+}

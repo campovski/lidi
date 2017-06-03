@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import User
 from .forms import SignupForm
-from .support import add_tmp_user
+from .support import add_tmp_user, confirm_user
 from lidi.settings import BASE_HTTP_ADDRESS
 
 def index(request):
@@ -21,3 +22,15 @@ def index(request):
 	else:
 		form = SignupForm()
 	return render(request, 'signup/index.html', { 'form': form })
+
+def confirm(request, conf_link):
+	ret_val = confirm_user(conf_link)
+	if ret_val == 0:
+		return HttpResponse('Your account has been activated')
+	elif ret_val == -1:
+		return HttpResponse('Hm, that\'s strange...')
+	elif ret_val == -2:
+		return HttpResponse('Your link appears to be broken...')
+	elif ret_val > 0:
+		return HttpResponse('Oops, we could not make you a directory.')
+	return HttpResponse('You should not even get here...')

@@ -15,8 +15,9 @@ sudo apt-get update;
 sudo apt-get install mono-complete;
 
 # Export directory names
-source ./export_vars.sh $1;
-source /home/$(whoami)/.bashrc;
+# You have to append a line to .bashrc... Will figure something
+# out to automate it
+source $HOME/.bashrc;
 
 # Install chroot utils
 sudo apt-get install dchroot debootstrap;

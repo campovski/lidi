@@ -1,6 +1,6 @@
 from django.core.mail import send_mail
 from .models import User
-from lidi.settings import BASE_HTPP_ADDRESS
+from lidi.settings import BASE_HTTP_ADDRESS
 import os
 import hashlib
 import random
@@ -34,8 +34,10 @@ def add_tmp_user(username, password, email, country, language, programming_langu
 
 	user.save()
 
-def user_confirmed(user):
+def confirm_user(user):
 	usr = User.objects.get(username=user)
+	if not user:
+		return -2
 	usr.is_active = True
 	usr.save()
 
