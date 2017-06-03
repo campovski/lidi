@@ -1,14 +1,15 @@
 from django.core.mail import send_mail
 from .models import User
+from lidi.settings import BASE_HTPP_ADDRESS
 import os
 import hashlib
 import random
 
-def generate_random_link(username):
-	hashed = hashlib.sha256(b'{0}'.format(username)).hexdigest()
-	for _ in range(40):
+def generate_random_seq():
+	hashed = ''
+	while len(hashed) < 61:
 		hashed += str(random.randint(0, 9))
-	return 'http://127.0.0.1:8000/signup/confirm/{0}'.format(hashed)
+	return hashed
 
 def add_tmp_user(username, password, email, country, language, programming_language):
 	user = User()
@@ -19,8 +20,10 @@ def add_tmp_user(username, password, email, country, language, programming_langu
 	user.language_id = language.id
 	user.programming_language_id = programming_language.id
 
-	link = generate_random_link(username)
-	user.conf_link = link
+	seq = generate_random_seq()
+	user.conf_link = seq
+
+	link = '{0}/signup/confirm/{1}'.format(BASE_HTTP_ADDRESS, seq)
 
 	subject = '[codegasm] Confirm your email address'
 	msg = 'Please click on the following link to confirm your email address\
