@@ -1,38 +1,52 @@
 <html>
+
+{% load static %}
+
 <head>
 	<meta charset="utf-8">
-	<title>Lidi.com -- Login</title>
+	<title>Lidi -- Login</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
 </head>
 <body>
         <div id="header">
-                <ul>
-                        <li><a href="{% url 'home:index' %}">Home</a></li>
-                        <li><a href="{% url 'problem:index' %}">Problems</a></li>
-                        <li><a href="">Statistics</a></li>
-                        {% if user != None %}
-                                <li><a href="{% url 'upload:upload' %}">Upload</a></li>
-                                <li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
-                        {% else %}
-                                <li><a href="{% url 'login:index' %}">Login</a></li>
-                                <li><a href="{% url 'signup:index' %}">Sign Up</a></li>
-                        {% endif %}
-                </ul>
+		<div id="header-inner">
+			<nav>
+	                	<ul>
+        	                	<li><a href="{% url 'home:index' %}">Home</a></li>
+	                	        <li><a href="{% url 'problem:index' %}">Problems</a></li>
+        	                	<li><a href="">Statistics</a></li>
+	        	                {% if user != None %}
+        	        	                <li><a href="{% url 'upload:upload' %}">Upload</a></li>
+                	        	        <li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
+		                        {% else %}
+                		                <li><a href="{% url 'login:index' %}">Login</a></li>
+                                		<li><a href="{% url 'signup:index' %}">Sign Up</a></li>
+		                        {% endif %}
+                		</ul>
+			</nav>
+		</div>
         </div>
 
-	<div id="content">
-		{% if user != None %}
-			<div id="form">
-				<form enctype="multipart/form-data" method="POST">
-					{% csrf_token %}
-					{{ form }}
-					<button type="submit">Upload</button>
-				</form>
-			</div>
-		{% else %}
-			<div id="please_login">
-				Please login in order to upload files.
-			</div>
-		{% endif %}
+	<div id="page">
+		<div id="content">
+			{% if user != None %}
+				<div id="upload">
+					<div id="form">
+						<form enctype="multipart/form-data" method="POST">
+							{% csrf_token %}
+							{{ form }}
+							<input type="submit" value="Upload">
+						</form>
+					</div>
+				</div>
+			{% else %}
+				<div id="please_login">
+					<p class="error">Please login in order to upload files.</p>
+				</div>
+			{% endif %}
+		</div>
 	</div>
 </body>
 

@@ -11,7 +11,7 @@ class Problem(models.Model):
 class Submission(models.Model):
 	user = models.ForeignKey(signup.models.User)
 	problem = models.ForeignKey(Problem)
-	date = models.DateField(default=date.today)
+	date = models.CharField(max_length=10, default='{0}/{1}/{2}'.format(date.today().year, date.today().month, date.today().day))
 	tries = models.IntegerField()
-	is_solved = models.BooleanField(default=False)
+	grade = models.IntegerField(default=-1)
 	sub_file = models.CharField(max_length=100)

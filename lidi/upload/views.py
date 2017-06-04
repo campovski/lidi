@@ -3,12 +3,16 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from .forms import UploadFileForm
 from .support import handle_uploaded_file
+import login
 
 def upload_file(request):
 	try:
 		request.session['user']
 	except KeyError:
-		request.session['user'] = None	
+		request.session['user'] = None
+	
+	if request.session['user'] is None:
+		return login.views.index(request, 'upload')
 
 	if request.method == 'POST':
 		form = UploadFileForm(request.POST, request.FILES)

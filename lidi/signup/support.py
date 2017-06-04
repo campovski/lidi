@@ -34,15 +34,12 @@ def add_tmp_user(username, password, email, country, language, programming_langu
 
 	user.save()
 
-def confirm_user(user):
-	usr = User.objects.get(username=user)
-	if not user:
+def confirm_user(conf_link):
+	usr = User.objects.get(conf_link=conf_link)
+	if not usr:
 		return -2
 	usr.is_active = True
+	usr.conf_link = ''
 	usr.save()
 
-	# Safety precautions
-	usr = User.objects.get(username=user)
-	if usr.is_active:
-		return os.system('mkdir $CG_FILES_UPLOADED/{0}'.format(usr.username))
-	return -1
+	return os.system('mkdir $CG_FILES_UPLOADED/{0}'.format(usr.username))

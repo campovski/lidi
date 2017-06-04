@@ -101,7 +101,7 @@ tr:hover {
         padding: 20px;
 }
 
-#upload_solution {
+#upload {
 	max-width: 200px;
 	margin: 10px auto;
 }
@@ -115,3 +115,51 @@ input[type=submit] {
 	color: black;
 	cursor: pointer;
 }
+
+#notify-signin {
+	margin-top: 4px;
+	text-align: center;
+	width: 100%;
+}
+
+
+
+/*--- STYLE FOR LOGIN --*/
+
+#login_logo {
+	max-width: 400px;
+	text-align: center;
+	margin: 0 auto 10px auto;
+}
+
+#login_form {
+	max-width: 400px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#login_form input[type=text], #login_form input[type=password] {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+	outline: none;
+}
+
+#login_form input[type=text]:focus, #login_form input[type=password]:focus {
+	border: 2px solid #555;
+}
+
+#login_form input[type=submit] {
+	padding: 12px 0;
+}
+
+p.error {
+	color: red;
+	font-style: bold;
+	margin: 10px 0;
+}
+

@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.http import HttpResponse
-from .models import Problem
+from .models import Problem, Submission
+from signup.models import User
 from .forms import UploadSolutionForm
 from .support import handle_solution
 
@@ -33,10 +35,14 @@ def detail(request, problem_id=2):
 	problem = Problem.objects.filter(pk=problem_id)[0]
 
 	try:
-		request.session['user']
+		user_id = User.objects.get(username=request.session['user']).id
+		submission = Submission.objects.get(user=user_id, problem=problem_id)
+		h_grade = submission.grade
 	except KeyError:
 		request.session['user'] = None
-	
+	except ObjectDoesNotExist:
+		h_grade = -1
+
 	if request.method == 'POST':
 		form = UploadSolutionForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -47,4 +53,4 @@ def detail(request, problem_id=2):
 				return HttpResponse("Please login")
 	else:
 		form = UploadSolutionForm()
-	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'] })
+	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'], 'grade': h_grade })

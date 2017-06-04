@@ -4,7 +4,13 @@ from .forms import LoginForm
 from .support import validate_login
 from lidi.settings import BASE_HTTP_ADDRESS
 
-def index(request):
+def index(request, error=None):
+	try:
+		if request.session['user'] is not None:
+			return redirect(BASE_HTTP_ADDRESS)
+	except KeyError:
+		pass # continue with logging in
+
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():
@@ -15,10 +21,10 @@ def index(request):
 				request.session['user'] = username
 				return redirect(BASE_HTTP_ADDRESS)
 			else:
-				return HttpResponse("Wrong username or password")
+				return render(request, 'login/index.html', { 'form': form, 'valid': False, 'error': error })
 	else:
 		form = LoginForm()
-	return render(request, 'login/index.html', { 'form': form })
+	return render(request, 'login/index.html', { 'form': form, 'valid': True, 'error': error })
 
 def logout(request):
 	request.session['user'] = None

@@ -41,13 +41,18 @@
 		</div>
 
 		{% if user != None %}
-			<div id="upload_solution">
+			<div id="upload">
 				<form enctype="multipart/form-data" method="POST">
 					{% csrf_token %}
 					{{ form }}
 					<input type="submit" value="Submit">
 				</form>
 			</div>
+			{% if grade != -1 %}
+				<div id="highest-grade">
+					<p>Your highest grade: <b>{{ grade }}</b></p>
+				</div>
+			{% endif %}
 		{% else %}
 			<div id="notify-signin">
 				Sign in to upload you solution.

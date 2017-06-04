@@ -1,17 +1,33 @@
 <html>
+
+{% load static %}
+
 <head>
 	<meta charset="utf-8">
-	<title>Lidi.com -- Login</title>
+	<title>Lidi -- Login</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
 </head>
 <body>
-	<div id="content">
-		<div id="form">
-			<form method="POST">
-				{% csrf_token %}
-				{{ form }}
-				<button type="submit">Login</button>
-				<input type="checkbox" checked="checked">Remember me
-			</form>
+	<div id="page">
+		<div id="content">
+			<div id="login_logo">
+				<h1>LIDI</h1>
+				<p>Log in</p>
+				{% if error == 'upload' %}
+					<p class="error">You must log in to upload problems.</p>
+				{% endif %}
+			</div>
+			<div id="login_form">
+				<form method="POST">
+					{% csrf_token %}
+					{{ form }}
+					<input type="submit" value="Login">
+				</form>
+				{% if not valid %}
+					<p class="error">Invalid (username, password) combination.</p>
+				{% endif %}
+			</div>
 		</div>
 	</div>
 </body>
