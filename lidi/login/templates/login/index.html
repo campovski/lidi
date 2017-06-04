@@ -23,6 +23,7 @@
 					{% csrf_token %}
 					{{ form }}
 					<input type="submit" value="Login">
+					<input type="button" value="Home" onclick="location.href = '{% url 'home:index' %}';">
 				</form>
 				{% if not valid %}
 					<p class="error">Invalid (username, password) combination.</p>

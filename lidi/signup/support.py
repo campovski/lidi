@@ -1,9 +1,16 @@
-from django.core.mail import send_mail
-from .models import User
-from lidi.settings import BASE_HTTP_ADDRESS
 import os
 import hashlib
 import random
+import urllib
+import urllib2
+import json
+
+from django.core.mail import send_mail
+
+from .models import User
+
+from lidi.settings import BASE_HTTP_ADDRESS
+from lidi.local_settings import GOOGLE_RECAPTCHA_SECRET_KEY
 
 def generate_random_seq():
 	hashed = ''
@@ -43,3 +50,16 @@ def confirm_user(conf_link):
 	usr.save()
 
 	return os.system('mkdir $CG_FILES_UPLOADED/{0}'.format(usr.username))
+
+def validate_recaptcha(request):
+	recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+        	'secret': GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+        }
+        data = urllib.urlencode(values)
+        req = urllib2.Request(url, data)
+        response = urllib2.urlopen(req)
+        result = json.load(response)
+	return result['success']

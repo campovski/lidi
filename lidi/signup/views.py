@@ -1,14 +1,26 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
 from .models import User
 from .forms import SignupForm
-from .support import add_tmp_user, confirm_user
+from .support import add_tmp_user, confirm_user, validate_recaptcha
+
 from lidi.settings import BASE_HTTP_ADDRESS
 
+
 def index(request):
+	try:
+		if request.session['user'] is not None:
+			return redirect('login:logout')
+	except KeyError:
+		request.session['user'] = None
+
 	if request.method == 'POST':
 		form = SignupForm(request.POST)
 		if form.is_valid():
+			if not validate_recaptcha(request):
+				return redirect('signup:index', permanent=True)
+
 			user = form.cleaned_data['username']
 			pwd = form.cleaned_data['password']
 			repwd = form.cleaned_data['repeat_password']
@@ -21,7 +33,7 @@ def index(request):
 				return redirect(BASE_HTTP_ADDRESS)
 	else:
 		form = SignupForm()
-	return render(request, 'signup/index.html', { 'form': form })
+	return render(request, 'signup/index.html', { 'form': form, 'user': request.session['user'] })
 
 def confirm(request, conf_link):
 	ret_val = confirm_user(conf_link)

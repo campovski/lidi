@@ -31,25 +31,31 @@
 
 	<div id="page">
 		<div id="content">
-			{% if user != None %}
-				<div id="upload">
-					<div id="form">
-						<form enctype="multipart/form-data" method="POST">
-							{% csrf_token %}
-							{{ form }}
-							<input type="submit" value="Upload">
-						</form>
-					</div>
+			<div id="upload_text">
+				<h2>Uploading problems</h2>
+				<h3>Rules</h3>
+				<p>The rules are simple. You submit a problem in an archive (either .zip or .tar.gz, although others are OK as well). Preferably name an archive with problem name (you can use spaces in filename). Otherwise the name of problem will be chosen by admins. Each problem archive must contain:</p>
+				<ul>
+					<li>A file with task styled with markdown and MathJax.</li>
+					<li>Ten (10) testcase files. Each testcase can have subtasks but must be included in same file.</li>
+					<li>Ten (10) testcase solution files.</li>
+					<li>A file with memory and time limits. The file should look like this: <code>memory=128; time=2</code>. You can insert any spaces you like, just keep it in one line and separate memory from time with semicolon. The example given means that a program can use at most 128MiB of memory and can run for at most 2 seconds.</li>
+				</ul>
+				<p>If you want to upload multiple tasks at once, you can do that by including problem archives into one master archive, just make sure the archive does not excede the upload limit. Also name that file "master", e.g. "master.tar.gz".</p>
+			</div>
+			<div id="upload">
+				<div id="form">
+					<form enctype="multipart/form-data" method="POST">
+						{% csrf_token %}
+						{{ form }}
+						<div class="g-recaptcha" data-sitekey="6LdXGyQUAAAAAB8JUpnvNLFJv0b36ygtg5Z1OrE3"></div>
+						<input type="submit" value="Upload">
+					</form>
 				</div>
-			{% else %}
-				<div id="please_login">
-					<p class="error">Please login in order to upload files.</p>
-				</div>
-			{% endif %}
+			</div>
 		</div>
 	</div>
 </body>
 
-
-
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </html>

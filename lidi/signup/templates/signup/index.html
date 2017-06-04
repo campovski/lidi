@@ -1,20 +1,38 @@
 <html>
+
+{% load static %}
+
 <head>
 	<meta charset="utf-8">
 	<title>Lidi.com -- Login</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
 </head>
 <body>
-	<div id="content">
-		<div id="form">
-			<form method="POST">
-				{% csrf_token %}
-				{{ form }}
-				<button type="submit">Signup</button>
-			</form>
+	<div id="page">
+		<div id="login_logo">
+			<h1>LIDI</h1>
+			<p>SIGN UP</p>
+			{% if error == 'upload' %}
+				<p class="error">You must log in to upload problems.</p>
+			{% endif %}
+		</div>
+
+		<div id="content">
+			<div id="login_form">
+				<form method="POST">
+					{% csrf_token %}
+					{{ form }}
+					<div class="g-recaptcha" data-sitekey="6LdXGyQUAAAAAB8JUpnvNLFJv0b36ygtg5Z1OrE3"></div>
+					<input type="submit" value="Sign up">
+					<input type="reset" value="Reset">
+					<input type="button" value="Home" onclick="location.href = '{% url 'home:index' %}';">
+				</form>
+			</div>
 		</div>
 	</div>
 </body>
 
-
-
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </html>
