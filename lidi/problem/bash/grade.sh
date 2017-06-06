@@ -128,24 +128,4 @@ case $extension in
 esac;
 
 echo ${errors[*]};
-
-# Since we are not deleting the compiled program (in case a compilation is
-# needed), it happens that if a user after successful submission submits
-# a program that will not compile, the old one (correct) does not get overwritten,
-# therefore we check the wrong submission on a correct program from before,
-# thus resulting in wrong grade. We are sure to assume that a script that
-# does not compile, will return 0 points. So we check the last element of
-# errors if there were any compilation errors. We take care of python in
-# such way, that we end a dummy 0 as the compilation error since python
-# only interprets the code and does not leave any other programs behind and
-# each time we upload a python program, the old one gets overwritten. We have
-# to do that, because the program might run on some testcases and crash on
-# the last one. If we checked the last element of errors, we would see it
-# is not 0 and would return grade=0, although the program might have achieved
-# points on previous testcases.
-if [ ${errors[-1]} -eq 0 ]
-then
-	echo $count;
-else
-	echo 0;
-fi;
+echo $count;

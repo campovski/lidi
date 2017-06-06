@@ -22,7 +22,7 @@ def handle_solution(f, problem_id, user, lang):
 	# Grade the task using grade.sh
 	grader_out = os.popen('bash problem/bash/grade.sh {0} {1}'.format(f_local, lang)).read()
 	grade = int(grader_out.strip().split('\n')[-1])
-	print grader_out.strip().split('\n')[-2]
+	errors = grader_out.strip().split('\n')[-2].split()
 
 	# Add submission
 	user = User.objects.get(username=user)
@@ -34,9 +34,13 @@ def handle_solution(f, problem_id, user, lang):
 		if grade > submission.grade:
 			submission.grade = grade
 			submission.date = today_str
+
+		# Save newer solution with same points.
+		if grade >= submission.grade:
 			os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
 		else:
 			os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
+
 	except ObjectDoesNotExist:
 		submission = Submission()
 		submission.user_id = user.id
@@ -44,7 +48,7 @@ def handle_solution(f, problem_id, user, lang):
 		submission.grade = grade
 		submission.date = today_str
 		submission.tries = 1
-		os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
+		os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
 
 	finally:
 		if grade == 10 and submission.tries_until_correct == 0:
