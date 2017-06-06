@@ -20,25 +20,34 @@ def handle_solution(f, problem_id, user, lang):
 			destination.write(chunk)
 
 	# Grade the task using grade.sh
-	grade = os.popen('bash problem/grade.sh {0} {1}'.format(f_local, lang)).read().strip()
+	grader_out = os.popen('bash problem/bash/grade.sh {0} {1}'.format(f_local, lang)).read()
+	grade = int(grader_out.strip().split('\n')[-1])
+	print grader_out.strip().split('\n')[-2]
 
 	# Add submission
-	user_id = User.objects.get(username=user).id
+	user = User.objects.get(username=user)
 	today = date.today()
 	today_str = '{0}/{1}/{2}'.format(today.year, today.month, today.day)
 	try:
-		submission = Submission.objects.get(user=user_id, problem=problem_id)
+		submission = Submission.objects.get(user=user.id, problem=problem_id)
 		submission.tries += 1
-		if grade >= submission.grade:
+		if grade > submission.grade:
 			submission.grade = grade
 			submission.date = today_str
+			os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
+		else:
+			os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
 	except ObjectDoesNotExist:
 		submission = Submission()
-		submission.user_id = user_id
+		submission.user_id = user.id
 		submission.problem_id = problem_id
 		submission.grade = grade
 		submission.date = today_str
 		submission.tries = 1
+		os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
+
 	finally:
+		if grade == 10 and submission.tries_until_correct == 0:
+			submission.tries_until_correct = submission.tries
 		submission.save()
 	return grade
