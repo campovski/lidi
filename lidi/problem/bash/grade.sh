@@ -148,4 +148,4 @@ then
 	echo $count;
 else
 	echo 0;
-fi
+fi;
