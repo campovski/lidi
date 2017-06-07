@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Lidi -- Login</title>
+	<title>Lidi -- Upload a problem</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
@@ -51,6 +51,11 @@
 						<div class="g-recaptcha" data-sitekey="6LdXGyQUAAAAAB8JUpnvNLFJv0b36ygtg5Z1OrE3"></div>
 						<input type="submit" value="Upload">
 					</form>
+					{% if msg == 1 %}
+						<p class="error">File uploaded successfully, thanks!</p>
+					{% elif msg == 0 %}
+						<p class="error">Uploaded file is either not a valid archive or it excedes 10MB.</p>
+					{% endif %}
 				</div>
 			</div>
 		</div>

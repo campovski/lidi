@@ -145,4 +145,8 @@ DEFAULT_FROM_EMAIL = ''
 
 BASE_HTTP_ADDRESS = 'http://127.0.0.1:8000'
 
+# Upload problem files restrictions
+FILETYPES = ['gz', 'zip', 'rar', '7z']
+MAX_UPLOAD_SIZE = 10485760 # 10MB
+
 from .local_settings import *

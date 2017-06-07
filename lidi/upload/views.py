@@ -17,9 +17,13 @@ def upload_file(request):
 	if request.method == 'POST':
 		form = UploadFileForm(request.POST, request.FILES)
 		if form.is_valid():
-			handle_uploaded_file(request.FILES['f'])
-			return HttpResponse("File uploaded is {0}".format(request.FILES['f']))
+			file_ok = handle_uploaded_file(request.FILES['f'])
+			request.FILES['f'] = None
+			if file_ok:
+				return render(request, 'upload/upload.html', { 'form': form, 'user': request.session['user'], 'msg': 1 })
+			else:
+				return render(request, 'upload/upload.html', { 'form': form, 'user': request.session['user'], 'msg': 0 })
 	else:
 		form = UploadFileForm()
-	return render(request, 'upload/upload.html', { 'form': form, 'user': request.session['user'] })
+	return render(request, 'upload/upload.html', { 'form': form, 'user': request.session['user'], 'msg': -1 })
 
