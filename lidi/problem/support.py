@@ -19,10 +19,10 @@ def handle_solution(f, problem_id, user, lang):
 		for chunk in f.chunks():
 			destination.write(chunk)
 
-	# Grade the task using grade.sh
-	grader_out = os.popen('bash problem/bash/grade.sh {0} {1}'.format(f_local, lang)).read()
+	# Grade the task using agrader.sh
+	grader_out = os.popen('bash problem/bash/agrader.sh {0} {1}'.format(f_local, lang)).read()
 	grade = int(grader_out.strip().split('\n')[-1])
-	errors = grader_out.strip().split('\n')[-2].split()
+#	errors = grader_out.strip().split('\n')[-2].split()
 
 	# Add submission
 	user = User.objects.get(username=user)

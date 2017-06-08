@@ -13,7 +13,7 @@ problem_dir=$CG_FILES_UPLOADED/$user/$problem;
 
 case $extension in
 	c)
-		echo -e "#define execl \"\"\n#define system \"\"\n#define exec \"\"\n#define execv \"\"\n#define getenv \"\"\n#define getcwd \"\"\n$(cat $problem_dir/$file)" > $problem_dir/$file;
+	#	echo -e "#define execl \"\"\n#define system \"\"\n#define exec \"\"\n#define execv \"\"\n#define getenv \"\"\n#define getcwd \"\"\n$(cat $problem_dir/$file)" > $problem_dir/$file;
 
 		gcc -o $problem_dir/$filename $problem_dir/$file;
 		errors[10]=$?;

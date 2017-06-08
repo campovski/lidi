@@ -21,5 +21,6 @@ do
 	mv $move_from/out_${2}_${1}_${i} $move_to_last;
 done;
 
+mv $move_from/errors $move_to_last;
 mv $move_from/${2}_${1}.* $move_to_prog;
 find $move_from -maxdepth 1 -type f -delete;
