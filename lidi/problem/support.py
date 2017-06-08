@@ -54,4 +54,5 @@ def handle_solution(f, problem_id, user, lang):
 		if grade == 10 and submission.tries_until_correct == 0:
 			submission.tries_until_correct = submission.tries
 		submission.save()
-	return grade
+
+	return grade, submission.grade

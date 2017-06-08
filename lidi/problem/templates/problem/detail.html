@@ -45,12 +45,18 @@
 				<form enctype="multipart/form-data" method="POST">
 					{% csrf_token %}
 					{{ form }}
+					<div class="g-recaptcha" data-sitekey="6LdXGyQUAAAAAB8JUpnvNLFJv0b36ygtg5Z1OrE3"></div>
 					<input type="submit" value="Submit">
 				</form>
 			</div>
 			{% if grade != -1 %}
-				<div id="highest-grade">
+				<div id="highest_grade">
 					<p>Your highest grade: <b>{{ grade }}</b></p>
+				</div>
+			{% endif %}
+			{% if l_grade != -1 %}
+				<div id="last_grade">
+					<p>You scored: <b>{{ l_grade }}</b></p>
 				</div>
 			{% endif %}
 		{% else %}
@@ -60,4 +66,7 @@
 		{% endif %}
 	</div>
 </body>
+
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </html>

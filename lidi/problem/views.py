@@ -34,6 +34,8 @@ def index(request, page=1, sort_by='id'):
 def detail(request, problem_id=2):
 	problem = Problem.objects.filter(pk=problem_id)[0]
 
+	l_grade = -1
+
 	try:
 		user_id = User.objects.get(username=request.session['user']).id
 		submission = Submission.objects.get(user=user_id, problem=problem_id)
@@ -47,10 +49,10 @@ def detail(request, problem_id=2):
 		form = UploadSolutionForm(request.POST, request.FILES)
 		if form.is_valid():
 			if request.session['user'] != None:
-				grade = handle_solution(request.FILES['f'], problem_id, request.session['user'], "C")
-				return HttpResponse("Grade = {0}".format(grade))
+				l_grade, h_grade = handle_solution(request.FILES['f'], problem_id, request.session['user'], "C")
+				return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'], 'grade': h_grade, 'l_grade': l_grade })
 			else:
 				return HttpResponse("Please login")
 	else:
 		form = UploadSolutionForm()
-	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'], 'grade': h_grade })
+	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'], 'grade': h_grade, 'l_grade': l_grade })
