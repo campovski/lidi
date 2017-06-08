@@ -11,6 +11,8 @@ mkdir -p $move_to_best;
 mkdir -p $move_to_last;
 mkdir -p $move_to_prog;
 
+rm -f $move_to_prog/*;
+
 for i in 0 1 2 3 4 5 6 7 8 9
 do
 	if [ $3 -eq 1 ]
