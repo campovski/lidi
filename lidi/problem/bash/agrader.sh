@@ -46,6 +46,7 @@ case $end in
 		timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_c.sh $user $problem $filename $file);;
 
 	py)
+		#TODO Memory limit.
 		if [ $proglang == "Python 3" ]
 		then
 			timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_py3.sh $user $problem $filename $file);
@@ -63,6 +64,7 @@ case $end in
 		fi;
 
 		# Run the program on limited memory and time.
+		#TODO Memory limit.
 		timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_c.sh $user $problem $filename $file);;
 
 	f)
@@ -106,6 +108,7 @@ case $end in
 		fi;
 
 		# Run the program on limited memory and time.
+		#TODO Memory limit.
 		timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_c.sh $user $problem $filename $file);;
 
 	*)
