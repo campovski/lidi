@@ -1,5 +1,5 @@
 # Pascal installation
-sudo apt-get install fpc;
+sudo apt-get install fp-compiler;
 
 # Java installation
 sudo apt-get install default-jre;
