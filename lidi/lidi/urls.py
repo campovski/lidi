@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^problems/', include('problem.urls')),
     url(r'^upload/', include('upload.urls')),
     url(r'^signup/', include('signup.urls')),
+    url(r'^statistics/', include('statistics.urls')),
     url(r'^', include('home.urls')),
 ]

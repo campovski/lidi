@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'signup',
     'problem',
     'upload',
+    'statistics',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
