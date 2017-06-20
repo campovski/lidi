@@ -54,9 +54,59 @@
 					<p>Your highest grade: <b>{{ grade }}</b></p>
 				</div>
 			{% endif %}
-			{% if l_grade != -1 %}
+			{% if l_grade != -1 and error == -1 %}
 				<div id="last_grade">
 					<p>You scored: <b>{{ l_grade }}</b></p>
+				</div>
+			{% elif error != -1 %}
+				<div id="last_grade">
+					<p class="error">Error: {{ error }}</p>
+				</div>
+			{% endif %}
+			{% if out_time != -1 %}
+				<div id='last_out'>
+					Last out:
+					<ul>
+					{% for out in out_time.0 %}
+						<li>
+						    {% for line in out %}
+							{{ line }}
+						    {% endfor %}
+						</li>	
+					{% endfor %}
+				</div>
+				<div id='best_out'>
+					Best out:
+                                        <ul>
+                                        {% for out in out_time.1 %}
+                                                <li>       
+                                                    {% for line in out %}
+                                                        {{ line }}
+                                                    {% endfor %}
+                                                </li>   
+                                        {% endfor %}
+					</ul>
+				</div>
+				<div id='program'>
+					{{ out_time.2 }}
+				</div>
+				<div id='times'>
+					Last times:
+                                        <ul>
+                                        {% for time in out_time.3.0 %}
+                                                <li>       
+                                                    {{ time }}
+                                                </li>   
+                                        {% endfor %}
+					</ul>
+					Last times:
+                                        <ul>
+                                        {% for time in out_time.3.1 %}
+                                                <li>
+                                                    {{ time }}
+                                                </li>
+                                        {% endfor %}
+					</ul>
 				</div>
 			{% endif %}
 		{% else %}

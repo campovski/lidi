@@ -6,7 +6,7 @@ end="${file##*.}";
 filename="${file%.*}";
 problem="${filename%_*}";
 user="${filename#*_}";
-proglang=$2;
+# proglang=$2;
 
 problem_dir=$CG_FILES_UPLOADED/$user/$problem;
 
@@ -47,11 +47,19 @@ case $end in
 
 	py)
 		#TODO Memory limit.
-		if [ $proglang == "Python 3" ]
+		if [ "$3" == "2" ]
 		then
-			timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_py3.sh $user $problem $filename $file);
-		else
 			timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_py.sh $user $problem $filename $file);
+		else
+			timeout_error=$(timeout $((limit_t)) bash problem/bash/grade_py3.sh $user $problem $filename $file);
+		fi;
+
+		# Check for RTE.
+		err_rep=$(cat $problem_dir/errors);
+		if [ "$err_rep" != "0 0 0 0 0 0 0 0 0 0" ]
+		then
+			echo "RTE";
+			exit 0;
 		fi;;
 
 	pas)
@@ -62,6 +70,7 @@ case $end in
 			echo "RTE";
 			exit 0;
 		fi;
+		rm $problem_dir/${filename}.o;
 
 		# Run the program on limited memory and time.
 		#TODO Memory limit.

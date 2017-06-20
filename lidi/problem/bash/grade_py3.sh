@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Run the program with testcases and save the output of program.
-
 user=$1;
 problem=$2;
 filename=$3;

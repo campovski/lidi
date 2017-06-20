@@ -23,9 +23,16 @@ def handle_solution(f, problem_id, user, lang):
 
 	# Grade the task using agrader.sh
 	grader_out = os.popen('bash problem/bash/agrader.sh {0} {1}'.format(f_local, lang)).read()
-	grade = int(grader_out.strip().split('\n')[-1])
-#	errors = grader_out.strip().split('\n')[-2].split()
-	rewrite_times('{0}/time'.format(problem_dir))
+	error = -1
+	try:
+		grade = int(grader_out.strip().split('\n')[-1])
+	except ValueError:
+		error = grader_out
+		grade = 0
+	try:
+		rewrite_times('{0}/time'.format(problem_dir))
+	except IOError:
+		pass
 
 	# Add submission
 	user = User.objects.get(username=user)
@@ -58,7 +65,7 @@ def handle_solution(f, problem_id, user, lang):
 			submission.tries_until_correct = submission.tries
 		submission.save()
 
-	return grade, submission.grade
+	return grade, submission.grade, error
 
 
 def get_solutions_and_times(username, problem_id):
@@ -68,27 +75,42 @@ def get_solutions_and_times(username, problem_id):
 	user_id = User.objects.get(username=username).id
 	up_dir = '{0}/{1}/{2}'.format(os.popen('echo $CG_FILES_UPLOADED').read().strip(), username, problem_id)
 
-	for i in range(10):
-		f = open('{0}/best_out/out_{1}_{2}_{3}'.format(up_dir, problem_id, username, i))
-		outputs_h.append(f.read().replace('\n', '<br>'))
+	try:
+		for i in range(10):
+			outputs_h.append([])
+			f = open('{0}/best_out/out_{1}_{2}_{3}'.format(up_dir, problem_id, username, i))
+			for line in f:
+				outputs_h[i].append(line.strip())
+			f.close()
+
+			outputs_l.append([])
+			f = open('{0}/last_out/out_{1}_{2}_{3}'.format(up_dir, problem_id, username, i))
+			for line in f:
+				outputs_l[i].append(line.strip())
+			f.close()
+
+		# Read solution to problem (program).
+		prog_name = os.popen('ls {0}/prog'.format(up_dir)).read().strip()
+		f = open('{0}/prog/{1}'.format(up_dir, prog_name))
+		program = f.readlines()
 		f.close()
 
-		f = open('{0}/last_out/out_{1}_{2}_{3}'.format(up_dir, problem_id, username, i))
-		outputs_l.append(f.read().replace('\n', '<br>'))
+		# Read times.
+		times = [[], []]
+		f = open('{0}/last_out/time'.format(up_dir))
+		for line in f:
+			times[0].append(line.strip())
 		f.close()
 
-	# Read solutions to problems.
-	prog_name = os.popen('ls {0}/prog'.format(up_dir)).read().strip()
-	f = open('{0}/prog/{1}'.format(up_dir, prog_name))
-	program = f.read().replace('\n', '<br>')
-	f.close()
+		f = open('{0}/best_out/time'.format(up_dir))
+		for line in f:
+			times[1].append(line.strip())
+		f.close()
 
-	# Read times.
-	f = open('{0}/prog/times'.format(up_dir))
-	times = f.readlines()
-	f.close()
+		return outputs_l, outputs_h, program, times
 
-	return outputs_l, outputs_h, program, times
+	except IOError:
+		return -1
 
 
 def rewrite_times(f_times):
