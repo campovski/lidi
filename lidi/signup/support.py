@@ -45,11 +45,16 @@ def confirm_user(conf_link):
 	usr = User.objects.get(conf_link=conf_link)
 	if not usr:
 		return -2
+
+	create_dir_ret_val = os.system('mkdir $CG_FILES_UPLOADED/{0}'.format(usr.username))
+	if create_dir_ret_val != 0:
+		return create_dir_ret_val
+
 	usr.is_active = True
 	usr.conf_link = ''
 	usr.save()
 
-	return os.system('mkdir $CG_FILES_UPLOADED/{0}'.format(usr.username))
+	return 0
 
 def validate_recaptcha(request):
 	recaptcha_response = request.POST.get('g-recaptcha-response')
