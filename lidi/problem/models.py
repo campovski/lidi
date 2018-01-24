@@ -6,7 +6,13 @@ class Problem(models.Model):
 	name = models.CharField(max_length=200)
 	desc = models.CharField(max_length=6000)
 	difficulty = models.IntegerField()
-	submitted_by = models.ForeignKey(signup.models.User)
+	submitted_by = models.ForeignKey(signup.models.User, related_name='submitted_by')
+	submitted_on = models.DateField()
+	solved_by_how_many = models.IntegerField(default=0)
+	first_solved_by = models.ForeignKey(signup.models.User, related_name='first_solved_by', null=True)
+	first_solved_on = models.DateField(null=True)
+	last_successful_try = models.DateField(null=True)
+	
 
 class Submission(models.Model):
 	user = models.ForeignKey(signup.models.User)
