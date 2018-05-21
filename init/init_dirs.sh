@@ -19,10 +19,21 @@ if [ "$1" == "1" ]; then
 
     # Install docker
     sudo apt install -y docker;
+    
+    # Install postgresql
+    sudo apt install -y postgresql;
+    sudo service postgresql start;
+    
+    # Install virtualenv and python dependencies.
+    sudo apt install virtualenv;
+    virtualenv venv;
+    source venv/bin/activate;
+    pip install -r init/requirements.txt;
+    deactivate;
 fi;
 
 if [ "$2" == "1" ]; then
-    echo "source ${PWD}/bash/export_vars.sh ~" >> ~/.bashrc;
+    echo "source ${PWD}/init/export_vars.sh ~" >> ~/.bashrc;
     source ~/.bashrc;
 fi;
 
