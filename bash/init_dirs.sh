@@ -22,7 +22,7 @@ if [ "$1" == "1" ]; then
 fi;
 
 if [ "$2" == "1" ]; then
-    echo "source ${PWD}/bash/export_vars.sh \"~\"" >> ~/.bashrc;
+    echo "source ${PWD}/bash/export_vars.sh ~" >> ~/.bashrc;
     source ~/.bashrc;
 fi;
 
