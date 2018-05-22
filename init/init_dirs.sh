@@ -1,7 +1,13 @@
-if [[ "$#" -lt 2 || ( "$1" -ne 1 && "$1" -ne 0 ) || ( "$2" -ne 1 && "$2" -ne 0 ) ]] ; then
-    echo "Call script like 'source init/init_dirs.sh reinstall? add_to_bashrc? [--write-local-settings]'"
+if [ "$#" -lt 2 ]; then
+    echo "Call script like 'source init/init_dirs.sh reinstall? add_to_bashrc?"
     return 1
-fi; 
+fi;
+
+find init/ "init/local_settings.py";
+if [ "$?" -ne "0" ]; then
+    echo "Please create init/local_settings.py from init/local_settings_template.py and fill in required information!\n";
+    return 1;
+fi;
 
 if [ "$1" == "1" ]; then
     # Update and upgrade prior to doing anything...
@@ -58,24 +64,8 @@ mkdir $CG_FILES_TESTCASES_SOL;
 mkdir $CG_FILES_SOLUTIONS;
 mkdir $CG_FILES_UPLOADED;
 
-if [ "$3" == "--write-local-settings" ]; then
-    # Create dummy local_settings.py file.
-    printf "SECRET_KEY = 'vsdjhv093rvo32l2mlfk32l2VJsvormkm'\n\n\
-    DATABASES = {\n\
-        'default': {\n\
-          'ENGINE': 'django.db.backends.postgresql_psycopg2',\n\
-          'NAME': 'lidi_db',\n\
-          'USER': 'admin_lidi',\n\
-          'PASSWORD': 'testpwd1',\n\
-          'HOST': 'localhost',\n\
-          'PORT': ''\n\
-        }\n\
-    }\n\
-    EMAIL_HOST = ''\n\
-    EMAIL_HOST_USER = ''\n\
-    EMAIL_HOST_PASSWORD = ''\n\
-    DEFAULT_FROM_EMAIL = ''\n" > lidi/lidi/local_settings.py
- fi;
+# Move local_settings.py to lidi/lidi/local_settings.py
+mv init/local_settings.py lidi/lidi/local_settings.py
 
 # Database initialization.
 sudo -u postgres psql -f "${PWD}/init/init.sql"
