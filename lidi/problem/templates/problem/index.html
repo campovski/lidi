@@ -34,19 +34,21 @@
 		<div id="content">
 			<div id="pagination">
 				<span class="page_control">
-<!--					{% if problems.has_previous %}
-						<a href="?page={{ problems.previous_page_number }}">Previous</a>
-					{% endif %}-->
+					{% if problems.has_previous %}
+						<a href="{% url 'problem:index' page=problems.previous_page_number sort_by='id' %}">Previous</a>
+					{% else %}
+						<a class="disabled">Previous</a>
+					{% endif %}
 
-<a href="#">Previous</a>	
 					<span class="current_page">
 						<b>{{ problems.number }}</b> / {{ problems.paginator.num_pages }}
 					</span>
 
-<!--					{% if problems.has_next %}
-						<a href="?page={{ problems.next_page_number }}">Next</a>
-					{% endif %}-->
-<a href="#">Next</a>
+					{% if problems.has_next %}
+						<a href="{% url 'problem:index' page=problems.next_page_number sort_by='id' %}">Next</a>
+					{% else %}
+						<a class="disabled">Next</a>
+					{% endif %}
 				</span>
 			</div>
 		</div>

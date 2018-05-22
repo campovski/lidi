@@ -7,6 +7,9 @@ app_name = 'problem'
 urlpatterns = [
     # /problems/
     url(r'^$', views.index, name="index"),
+    
+    # /problems?page=<page>/
+    url(r'^\\?page=(?P<page>[0-9]+)/$', views.index, name="index"),
 
     # /problems?page=<page>?sort=<sort_by>/
     url(r'^\\?page=(?P<page>[0-9]+)\\?sort=(?P<sort_by>[\s\S]+)/$', views.index, name="index"),

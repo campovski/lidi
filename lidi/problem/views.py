@@ -1,33 +1,40 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse
+
 from .models import Problem, Submission
 from signup.models import User
 from .forms import UploadSolutionForm
 from .support import handle_solution, get_solutions_and_times
 
+
 def index(request, page=1, sort_by='id'):
+	print page
+	# Get all problems.
 	all_problems = Problem.objects.all().order_by(sort_by)
 
+	# If there are none, return basic HttpResponse.
 	if not all_problems:
 		return HttpResponse("Empty db")
 	
+	# Check if user variable is stored in session. If not, set the variable to None.
 	try:
 		request.session['user']
 	except KeyError:
 		request.session['user'] = None
 
+	# View all problems at once, without pagination.
 	if page == 0:
 		return render(request, 'problem/index.html', { 'problems': all_problems, 'user': request.session['user'] })
 
-	paginator = Paginator(all_problems, 100)
-	try:
+	paginator = Paginator(all_problems, 1)
+	try: # return the proper page
 		problems = paginator.page(page)
 	except PageNotAnInteger:
 		problems = paginator.page(1)
-	except EmptyPage:
-		problems = paginator.page(paginator.num_pages)
+	except EmptyPage: # if page is out of range, return the last page
+		return redirect('problem:index', page=paginator.num_pages, sort_by=sort_by)
 	
 	return render(request, 'problem/index.html', { 'problems': problems, 'user': request.session['user'] })
 

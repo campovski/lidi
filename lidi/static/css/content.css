@@ -29,6 +29,19 @@
 	color: #606060;
 }
 
+#pagination a.disabled {
+	pointer-events: none;
+	cursor: default;
+	text-decoration: none;
+	color: #aaaaaa;
+}
+
+#pagination a.disabled:hover {
+	text-decoration: none;
+	color: #aaaaaa;
+}
+
+
 #pagination b {
 	
 }
