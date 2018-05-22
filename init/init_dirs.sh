@@ -18,7 +18,10 @@ if [ "$1" == "1" ]; then
     sudo apt install -y fort77;
     
     # Install python and pip
-    sudo apt install -y python python3 python-dev python-pip
+    sudo apt install -y python
+    sudo apt install -y python3
+    sudo apt install -y python-dev
+    sudo apt install -y python-pip
 
     # C# installation
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
