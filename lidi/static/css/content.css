@@ -33,12 +33,12 @@
 	pointer-events: none;
 	cursor: default;
 	text-decoration: none;
-	color: #aaaaaa;
+	color: #aaaaaa !important;
 }
 
 #pagination a.disabled:hover {
-	text-decoration: none;
-	color: #aaaaaa;
+	text-decoration: none !important;
+	color: #aaaaaa !important;
 }
 
 

@@ -1,6 +1,12 @@
-from lidi.settings import FILETYPES, MAX_UPLOAD_SIZE
 import os
 
+from lidi.settings import FILETYPES, MAX_UPLOAD_SIZE
+
+
+"""
+	Saves uploaded problem files to temporary directory where they will be reviewed.
+	@param f: uploaded file
+"""
 def handle_uploaded_file(f):
 	if not limits_ok(f):
 		return 0
@@ -10,6 +16,10 @@ def handle_uploaded_file(f):
 			destination.write(chunk)
 	return 1
 
+"""
+	Checks if uploaded file satisfies limits set.
+	@param f: uploaded file
+"""
 def limits_ok(f):
 	ending = f.name.split('.')[-1]
 	if ending not in FILETYPES or f._size > MAX_UPLOAD_SIZE:

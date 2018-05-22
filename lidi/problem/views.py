@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from .models import Problem, Submission
 from signup.models import User
@@ -9,8 +9,12 @@ from .forms import UploadSolutionForm
 from .support import handle_solution, get_solutions_and_times
 
 
+"""
+	Loads a page with the list of problems. It supports pagination.
+	@param page: page of pagination of problems
+	@param sort_by: what column do we want to sort by
+"""
 def index(request, page=1, sort_by='id'):
-	print page
 	# Get all problems.
 	all_problems = Problem.objects.all().order_by(sort_by)
 
@@ -38,23 +42,33 @@ def index(request, page=1, sort_by='id'):
 	
 	return render(request, 'problem/index.html', { 'problems': problems, 'user': request.session['user'] })
 
-def detail(request, problem_id=2):
-	problem = Problem.objects.filter(pk=problem_id)[0]
+"""
+	Loads a page with details of desired problem.
+	@param problem_id: id of problem user want to see details for
+"""
+def detail(request, problem_id):
+	# Get the details of problem. If problem with id problem_id does not exist, raise 404.
+	try:
+		problem = Problem.objects.get(pk=problem_id)
+	except Problem.DoesNotExist:
+		raise Http404("Problem with given id does not exist.")
 
 	l_grade = -1
 	h_grade = -1
 	out_time = -1
 
+	# Get possible data about user's previous submissions.
 	try:
 		user_id = User.objects.get(username=request.session['user']).id
 		submission = Submission.objects.get(user=user_id, problem=problem_id)
 		h_grade = submission.grade
 		out_time = get_solutions_and_times(request.session['user'], problem_id)
-	except KeyError:
+	except KeyError: # user is not logged in
 		request.session['user'] = None
-	except ObjectDoesNotExist:
+	except ObjectDoesNotExist: # if no submissions, do nothing
 		pass
 
+	# If user submitted the program, we need to handle that.
 	if request.method == 'POST':
 		form = UploadSolutionForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -66,4 +80,6 @@ def detail(request, problem_id=2):
 				return HttpResponse("Please login")
 	else:
 		form = UploadSolutionForm()
+		
 	return render(request, 'problem/detail.html', { 'problem': problem, 'form': form, 'user': request.session['user'], 'grade': h_grade, 'l_grade': l_grade, 'error': -1, 'out_time': out_time })
+	

@@ -13,6 +13,9 @@ class Problem(models.Model):
 	first_solved_on = models.DateField(null=True)
 	last_successful_try = models.DateField(null=True)
 	
+	def __str__(self):
+		return self.name
+	
 
 class Submission(models.Model):
 	user = models.ForeignKey(signup.models.User)
@@ -22,3 +25,6 @@ class Submission(models.Model):
 	tries_until_correct = models.IntegerField(default=0)
 	grade = models.IntegerField(default=-1)
 	sub_file = models.CharField(max_length=100)
+	
+	def __str__(self):
+		return '{0} - {1}'.format(self.user, self.problem)

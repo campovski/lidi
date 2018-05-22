@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 
+
 class Country(models.Model):
 	name = models.CharField(max_length=100)
 	flag = models.CharField(max_length=200, default='')
@@ -30,6 +31,9 @@ class User(models.Model):
 	is_admin = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=False)
 	conf_link = models.CharField(max_length=200, default="")
+	
+	def __str__(self):
+		return self.username
 
 class UserForm(ModelForm):
 	class Meta:

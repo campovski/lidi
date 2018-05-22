@@ -4,11 +4,14 @@ from django.http import HttpResponse
 from .models import User
 from .forms import SignupForm
 from .support import add_tmp_user, confirm_user, validate_recaptcha
-
 from lidi.settings import BASE_HTTP_ADDRESS
 
 
+"""
+	Load signup page.
+"""
 def index(request):
+	# If user wants to signup but is already signed in, log previous user out.
 	try:
 		if request.session['user'] is not None:
 			return redirect('login:logout')
@@ -33,8 +36,15 @@ def index(request):
 				return redirect(BASE_HTTP_ADDRESS)
 	else:
 		form = SignupForm()
+		
 	return render(request, 'signup/index.html', { 'form': form, 'user': request.session['user'] })
 
+
+"""
+	Loads the page with results of confirming the user, when user clicked
+	on confirmation link.
+	@param conf_link: confirmation sequence
+"""
 def confirm(request, conf_link):
 	ret_val = confirm_user(conf_link)
 	if ret_val == 0:
