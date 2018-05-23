@@ -1,6 +1,5 @@
-from django.conf.urls import url, include
-from django.contrib import admin
-from django.views.generic.base import TemplateView
+from django.conf.urls import url
+
 from . import views
 
 app_name = 'signup'
