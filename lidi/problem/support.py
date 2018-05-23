@@ -53,7 +53,7 @@ def handle_solution(f, problem_id, user, lang):
     try:
         rewrite_times('{0}/time'.format(problem_dir))
     except IOError:
-        pass # grader quit with error, resulting in not producing the times file
+        pass  # grader quit with error, resulting in not producing the times file
 
     # Add submission
     user = User.objects.get(username=user)
@@ -72,7 +72,7 @@ def handle_solution(f, problem_id, user, lang):
         else:
             os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
 
-    except ObjectDoesNotExist: # this is user's first submission
+    except ObjectDoesNotExist:  # this is user's first submission
         submission = Submission()
         submission.user_id = user.id
         submission.problem_id = problem_id
@@ -86,7 +86,7 @@ def handle_solution(f, problem_id, user, lang):
             submission.tries_until_correct = submission.tries
 
             # Update number of people that solved this problem.
-            problem = Problem.objects.get(problem=problem_id)
+            problem = Problem.objects.get(pk=problem_id)
             if problem.solved_by_how_many == 0:
                 problem.first_solved_by = user
                 problem.first_solved_on = today_str

@@ -18,7 +18,7 @@ def index(request, page=1, sort_by='id'):
     """
 
     # Get all problems.
-    all_problems = Problem.objects.all().order_by(sort_by)
+    all_problems = list(Problem.objects.all().order_by(sort_by))
 
     # If there are none, return basic HttpResponse.
     if not all_problems:
@@ -29,6 +29,18 @@ def index(request, page=1, sort_by='id'):
         request.session['user']
     except KeyError:
         request.session['user'] = None
+
+    # If user is logged in, get his submissions to add user's results to the problems table.
+    if request.session['user'] is not None:
+        user_submissions = Submission.objects.filter(user=User.objects.get(username=request.session['user']))
+        for i, problem in enumerate(all_problems):
+            user_grade = -1  # if user has not tried the problem
+            for user_submission in user_submissions:
+                if problem == user_submission.problem:
+                    user_grade = user_submission.grade
+                    break
+            all_problems[i] = problem.__dict__
+            all_problems[i]['user_grade'] = user_grade
 
     # View all problems at once, without pagination.
     if page == 0:

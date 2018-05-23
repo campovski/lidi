@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # If solution was better than the previous, move solution to subdir
 # in which the best output is kept. Otherwise delete the output files.
 #

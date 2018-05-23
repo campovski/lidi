@@ -58,12 +58,22 @@
 					<th><a href="{% url 'problem:index' page=problems.number sort_by='id' %}">ID</a></th>
 					<th><a href="{% url 'problem:index' page=problems.number sort_by='name' %}">Name</a></th>
 					<th><a href="{% url 'problem:index' page=problems.number sort_by='difficulty' %}">Difficulty</a></th>
+                    {% if user is not None %}
+                        <th>Score</th>
+                    {% endif %}
 				<tr>
 				{% for problem in problems %}
 				<tr>
-                                        <td class="id"><a href="{% url 'problem:detail' problem.id %}">{{ problem.id }}</a></th>
+                    <td class="id"><a href="{% url 'problem:detail' problem.id %}">{{ problem.id }}</a></th>
 					<td class="name"><a href="{% url 'problem:detail' problem.id %}">{{ problem.name }}</a></th>
 					<td class="diff"><a href="{% url 'problem:detail' problem.id %}">{{ problem.difficulty }}</a></th>
+                    {% if user is not None %}
+                        {% if problem.user_grade != -1 %}
+                            <td class="diff">{{ problem.user_grade }}</td>  <!-- TODO add different class -->
+                        {% else %}
+                            <td class="diff"></td>
+                        {% endif %}
+                    {% endif %}
 				</tr>
 			{% endfor %}
 			</table>
@@ -71,7 +81,6 @@
 	</div>
 
 	<div id="footer">
-
 	</div>
 </body>
 
