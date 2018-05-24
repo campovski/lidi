@@ -34,6 +34,7 @@ class User(models.Model):
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     conf_link = models.CharField(max_length=200, default="")
+    container_id = models.CharField(max_length=12, null=True)
 
     def __str__(self):
         return self.username

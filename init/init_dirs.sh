@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ "$#" -lt 2 ]; then
     echo "Call script like 'source init/init_dirs.sh reinstall? add_to_bashrc?"
     return 1
@@ -36,6 +38,11 @@ if [ "$1" == "1" ]; then
 
     # Install docker
     sudo apt install -y docker;
+
+    # Build docker image
+    cd init/
+    docker build -t ubuntu:lidi .
+    cd ..
     
     # Install postgresql
     sudo apt install -y postgresql;
@@ -78,8 +85,3 @@ python manage.py populate_languages
 python manage.py populate_proglang
 deactivate
 cd ..
-
-if [ "$3" == "--write-local-settings" ]; then
-    echo "\n================================================\n"
-    echo "Fill in lidi/lidi/local_settings.py to enable mail communication!\n"
-fi;

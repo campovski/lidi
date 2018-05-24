@@ -41,7 +41,7 @@ def handle_solution(f, problem_id, user, lang):
             destination.write(chunk)
 
     # Grade the task using agrader.sh
-    grader_out = os.popen('bash problem/bash/agrader.sh {0} {1}'.format(f_local, lang)).read()
+    grader_out = os.popen('bash problem/bash/grader.sh {0} {1}'.format(f_local, lang)).read()
     error = -1
     try:
         # Get grade. In some proglangs, the grader might print compiler stuff, etc., so we
