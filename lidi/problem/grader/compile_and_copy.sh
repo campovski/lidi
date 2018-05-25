@@ -6,7 +6,7 @@
 file=$1;
 problem=$2;
 user=$3;
-filename=${problem}/${user};
+filename=${problem}_${user};
 end="${file##*.}";
 
 problem_dir=$CG_FILES_UPLOADED/$user/$problem;

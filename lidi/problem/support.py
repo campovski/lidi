@@ -109,7 +109,7 @@ def handle_solution(f, problem_id, user, lang):
         submission.grade = grade
         submission.date = today_str
         submission.tries = 1
-        os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
+        os.system('bash problem/grader/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
 
     finally:  # at the end we need to update some data about best submissions
         if grade == 10 and submission.tries_until_correct == 0:
