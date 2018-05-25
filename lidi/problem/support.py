@@ -1,4 +1,5 @@
 import os
+import subprocess
 import re
 from datetime import date
 
@@ -23,6 +24,7 @@ def handle_solution(f, problem_id, user, lang):
         :return error: -1 if no errors, otherwise output of agrader.sh
     """
 
+    print user
     # Get directory where files are stored.
     directory = os.popen('echo $CG_FILES_UPLOADED').read().strip()
 
@@ -31,7 +33,7 @@ def handle_solution(f, problem_id, user, lang):
     try:
         os.mkdir(problem_dir)
     except OSError:
-        pass # directory already exists
+        pass  # directory already exists
 
     # Write the submission file to previously created directory, rename it.
     _, end = f.name.split('.')
@@ -40,26 +42,54 @@ def handle_solution(f, problem_id, user, lang):
         for chunk in f.chunks():
             destination.write(chunk)
 
-    # Grade the task using agrader.sh
-    grader_out = os.popen('bash problem/bash/grader.sh {0} {1}'.format(f_local, lang)).read()
+    # Grade the task using agrader.sh. First compile the program if necessary and then copy
+    # files to docker container. Then run the program and check the grade
+    # with grader.
+    runner_ret_val = -1
+    grade = -1
     error = -1
-    try:
-        # Get grade. In some proglangs, the grader might print compiler stuff, etc., so we
-        # only need the last line, where the grade is.
-        grade = int(grader_out.strip().split('\n')[-1])
-    except ValueError: # cannot convert to int, meaning the last line is some error
-        error = grader_out
-        grade = 0
-    try:
+    limit_t = int(os.popen('cat $CG_FILES_PROBLEMS/{}/limit_t'.format(problem_id)).read().strip())
+    compiler_output = \
+    subprocess.check_output('bash problem/grader/compile_and_copy.sh {0} {1} {2}'.format(f_local, problem_id, user), shell=True).split('\n')[-2]
+    if compiler_output == 'OK':
+        if end == 'py':
+            if lang == 'Python 2':
+                runner_ret_val = subprocess.call(
+                    'timeout {2} bash problem/grader/run_py.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+            elif lang == 'Python 3':
+                runner_ret_val = subprocess.call(
+                    'timeout {2} bash problem/grader/run_py3.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+        elif end == 'java':
+            runner_ret_val = subprocess.call(
+                'timeout {2} bash problem/grader/run_java.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+        elif end == 'cs':
+            runner_ret_val = subprocess.call(
+                'timeout {2} bash problem/grader/run_cs.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+        else:
+            runner_ret_val = subprocess.call(
+                'timeout {2} bash problem/grader/run_c.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+
+        if runner_ret_val == 0:
+            try:
+                grade = int(subprocess.check_output('bash problem/grader/grade.sh {0} {1}'.format(user, problem_id),
+                                                    shell=True).split('\n')[-2])
+            except ValueError:
+                grade = -1
+                error = "RTE"
+        else:
+            error = "TLE"
+
+    else:
+        error = compiler_output
+
+    if grade != -1:
         rewrite_times('{0}/time'.format(problem_dir))
-    except IOError:
-        pass  # grader quit with error, resulting in not producing the times file
 
     # Add submission
     user = User.objects.get(username=user)
     today = date.today()
     today_str = '{0}-{1}-{2}'.format(today.year, today.month, today.day)
-    try: # if user has already submitted solution for this problem before
+    try:  # if user has already submitted solution for this problem before
         submission = Submission.objects.get(user=user.id, problem=problem_id)
         submission.tries += 1
         if grade > submission.grade:
@@ -68,9 +98,9 @@ def handle_solution(f, problem_id, user, lang):
 
         # Save newer solution with same points.
         if grade >= submission.grade:
-            os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
+            os.system('bash problem/grader/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
         else:
-            os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
+            os.system('bash problem/grader/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 0))
 
     except ObjectDoesNotExist:  # this is user's first submission
         submission = Submission()
@@ -81,7 +111,7 @@ def handle_solution(f, problem_id, user, lang):
         submission.tries = 1
         os.system('bash problem/bash/move_output.sh {0} {1} {2}'.format(user.username, problem_id, 1))
 
-    finally: # at the end we need to update some data about best submissions
+    finally:  # at the end we need to update some data about best submissions
         if grade == 10 and submission.tries_until_correct == 0:
             submission.tries_until_correct = submission.tries
 

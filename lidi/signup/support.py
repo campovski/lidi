@@ -78,7 +78,7 @@ def confirm_user(conf_link):
     usr.conf_link = ''
 
     # Create docker container for user.
-    container_id = os.popen('docker create -it --name lidi_container_{} ubuntu:lidi'.format(usr.username)).read()
+    container_id = os.popen('docker create -it --name lidi_container_{} --network none ubuntu:lidi'.format(usr.username)).read()
     usr.container_id = container_id[:12]
     usr.save()
 
