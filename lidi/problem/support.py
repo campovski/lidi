@@ -133,53 +133,102 @@ def get_solutions_and_times(username, problem_id):
         :param username: username of user whose data we want to get
         :param problem_id: id of problem for which we want to get data
         :return -1 if some IOError occured
-        :return output_l: output of last submission
-        :return output_h: output of best submission
+        :return last_outputs: output of last submission
+        :return best_outputs: output of best submission
         :return program: the source code of submission
-        :return times: array of running times on testcases of last and best submission
+        :return [last_times, best_times]: array of running times on testcases of last and best submission
     """
 
-    outputs_l = []  # what last submission outputted
-    outputs_h = []  # what best submission outputted
+    problem_dir = '{0}/{1}/{2}'.format(os.popen('echo $CG_FILES_UPLOADED').read().strip(), username, problem_id)
 
-    up_dir = '{0}/{1}/{2}'.format(os.popen('echo $CG_FILES_UPLOADED').read().strip(), username, problem_id)
+    last_outputs = get_last_outputs(problem_dir, problem_id, username)
+    best_outputs = get_best_outputs(problem_dir, problem_id, username)
+    last_times = get_times('{}/last_out/time'.format(problem_dir))
+    best_times = get_times('{}/best_out/time'.format(problem_dir))
+    program = get_program('{}/prog/'.format(problem_dir))
 
+    return last_outputs, best_outputs, program, [last_times, best_times]
+
+
+def get_last_outputs(problem_dir, problem, user):
+    """
+        Gets outputs of last submission.
+        :param problem_dir: main directory of submissions
+        :param problem: id of problem
+        :param user: user who wants to see submission for problem
+        :return: -1 if no file found, otherwise array of last outputs
+    """
+
+    outputs = []
     try:
         for i in range(10):
-            outputs_h.append([])
-            f = open('{0}/best_out/out_{1}_{2}_{3}'.format(up_dir, problem_id, username, i))
+            outputs.append([])
+            f = open('{0}/last_out/out_{1}_{2}_{3}'.format(problem_dir, problem, user, i))
             for line in f:
-                outputs_h[i].append(line.strip())
+                outputs[i].append(line.strip())
             f.close()
-
-            outputs_l.append([])
-            f = open('{0}/last_out/out_{1}_{2}_{3}'.format(up_dir, problem_id, username, i))
-            for line in f:
-                outputs_l[i].append(line.strip())
-            f.close()
-
-        # Read solution to problem (program).
-        prog_name = os.popen('ls {0}/prog'.format(up_dir)).read().strip()
-        f = open('{0}/prog/{1}'.format(up_dir, prog_name))
-        program = f.readlines()
-        f.close()
-
-        # Read times.
-        times = [[], []]
-        f = open('{0}/last_out/time'.format(up_dir))
-        for line in f:
-            times[0].append(line.strip())
-        f.close()
-
-        f = open('{0}/best_out/time'.format(up_dir))
-        for line in f:
-            times[1].append(line.strip())
-        f.close()
-
-        return outputs_l, outputs_h, program, times
-
     except IOError:
         return -1
+    return outputs
+
+
+def get_best_outputs(problem_dir, problem, user):
+    """
+        Gets outputs of best submission.
+        :param problem_dir: main directory of submissions
+        :param problem: id of problem
+        :param user: user who wants to see submission for problem
+        :return: -1 if no file found, otherwise array of best outputs
+    """
+
+    outputs = []
+    try:
+        for i in range(10):
+            outputs.append([])
+            f = open('{0}/best_out/out_{1}_{2}_{3}'.format(problem_dir, problem, user, i))
+            for line in f:
+                outputs[i].append(line.strip())
+            f.close()
+    except IOError:
+        return -1
+    return outputs
+
+
+def get_times(f_times):
+    """
+        Gets times from f_times.
+        :param f_times: file path of times
+        :return: -1 if no file found, otherwise array of times
+    """
+
+    times = []
+    try:
+        f = open(f_times)
+        for line in f:
+            times.append(line)
+        f.close()
+    except IOError:
+        return -1
+    return times
+
+
+def get_program(dir_program):
+    """
+        Finds the program and gets it.
+        :param dir_program: directory where the program is
+        :return:
+    """
+
+    f_program = os.path.join(dir_program, os.popen('ls {}'.format(dir_program)).read().strip())
+    program = []
+    try:
+        f = open(f_program)
+        for line in f:
+            program.append(line)
+        f.close()
+    except IOError:
+        return -1
+    return program
 
 
 def rewrite_times(f_times):

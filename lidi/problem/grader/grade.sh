@@ -16,7 +16,6 @@ then
     exit 0;
 fi;
 
-
 # Copy outputs to host.
 for i in 0 1 2 3 4 5 6 7 8 9
 do
@@ -28,7 +27,7 @@ docker cp lidi_container_${user}:/lidi_files/out/time $problem_dir/time;
 docker cp lidi_container_${user}:/lidi_files/out/errors $problem_dir/errors;
 
 # Remove all files from container and then stop it.
-docker exec -i lidi_container_${user} /bin/bash -c "rm -r /lidi_files/out/* /lidi_files/prog/* /lidi_files/testcases/*;";
+docker exec -i lidi_container_${user} /bin/bash -c "rm -rf /lidi_files/out/* /lidi_files/prog/* /lidi_files/testcases/*;";
 docker stop lidi_container_${user};
 
 err_rep=$(cat $problem_dir/errors);

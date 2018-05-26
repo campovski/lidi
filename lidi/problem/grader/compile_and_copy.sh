@@ -14,7 +14,7 @@ problem_dir=$CG_FILES_UPLOADED/$user/$problem;
 limit_m=$(cat $CG_FILES_PROBLEMS/$problem/limit_m);
 limit_t=$(cat $CG_FILES_PROBLEMS/$problem/limit_t);
 
-rm $problem_dir/last_out/*;
+rm -f $problem_dir/last_out/*;
 
 # Start user's docker container and copy testcases into it.
 docker start lidi_container_${user};
@@ -61,7 +61,7 @@ case $end in
             docker stop lidi_container_${user};
             exit 0;
         fi;
-        rm $problem_dir/${filename}.o;
+        rm -f $problem_dir/${filename}.o;
 
         # Copy program to docker container.
         docker cp $problem_dir/$filename lidi_container_${user}:/lidi_files/prog/$filename;;

@@ -6,29 +6,27 @@
 	<meta charsef="utf-8">
 	<title>Lidi -- Problem {{ problem.id }}</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
 </head>
 <body>
 	<div id="header">
 		<div id="header-inner">
-                        <nav>
-                                <ul>
-                                        <li><a href="{% url 'home:index' %}">Home</a></li>
-                                        <li><a class='current' href="{% url 'problem:index' %}">Problems</a></li>
-                                        <li><a href="">Statistics</a></li>
-                                        {% if user %}
-                                                <li><a href="{% url 'upload:upload' %}">Upload</a></li>
-                                                <li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
-                                        {% else %}
-                                                <li><a href="{% url 'login:index' %}">Login</a></li>
-                                                <li><a href="{% url 'signup:index' %}">Sign Up</a></li>
-                                        {% endif %}
-                                </ul>
-                        </nav>
-                </div>
-
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home:index' %}">Home</a></li>
+                    <li><a class='current' href="{% url 'problem:index' %}">Problems</a></li>
+                    <li><a href="">Statistics</a></li>
+                    {% if user %}
+                        <li><a href="{% url 'upload:upload' %}">Upload</a></li>
+                        <li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login:index' %}">Login</a></li>
+                        <li><a href="{% url 'signup:index' %}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
 	</div>
 	<div id="page">
 		<div id="content_problem">
@@ -63,7 +61,7 @@
 					<p class="error">Error: {{ error }}</p>
 				</div>
 			{% endif %}
-			{% if out_time != -1 %}
+			{% if out_time.0 != -1 %}
 				<div id='last_out'>
 					Last out:
 					<ul>
@@ -74,39 +72,54 @@
 						    {% endfor %}
 						</li>	
 					{% endfor %}
+                    </ul>
 				</div>
+            {% endif %}
+            {% if out_time.1 != -1 %}
 				<div id='best_out'>
 					Best out:
-                                        <ul>
-                                        {% for out in out_time.1 %}
-                                                <li>       
-                                                    {% for line in out %}
-                                                        {{ line }}
-                                                    {% endfor %}
-                                                </li>   
-                                        {% endfor %}
+                    <ul>
+                    {% for out in out_time.1 %}
+                        <li>
+                            {% for line in out %}
+                                {{ line }}
+                            {% endfor %}
+                        </li>
+                    {% endfor %}
 					</ul>
 				</div>
+            {% endif %}
+            {% if out_time.2 != -1 %}
 				<div id='program'>
 					{{ out_time.2 }}
 				</div>
+            {% endif %}
+            {% if out_time.3.0 != -1 or out_time.3.1 != -1 %}
 				<div id='times'>
-					Last times:
-                                        <ul>
-                                        {% for time in out_time.3.0 %}
-                                                <li>       
-                                                    {{ time }}
-                                                </li>   
-                                        {% endfor %}
-					</ul>
-					Best times:
-                                        <ul>
-                                        {% for time in out_time.3.1 %}
-                                                <li>
-                                                    {{ time }}
-                                                </li>
-                                        {% endfor %}
-					</ul>
+                    {% if out_time.3.0 != -1 %}
+					    <div class="times">
+                            Last times:
+                            <ul>
+                            {% for time in out_time.3.0 %}
+                                <li>
+                                    {{ time }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if out_time.3.1 != -1 %}
+                        <div class="times">
+                            Best times:
+                            <ul>
+                            {% for time in out_time.3.1 %}
+                                <li>
+                                    {{ time }}
+                                </li>
+                            {% endfor %}
+					        </ul>
+                        </div>
+					{% endif %}
 				</div>
 			{% endif %}
 		{% else %}

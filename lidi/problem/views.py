@@ -90,18 +90,18 @@ def detail(request, problem_id):
         form = UploadSolutionForm(request.POST, request.FILES)
         if form.is_valid():
             if request.session['user'] is not None:
-                l_grade, h_grade, error = handle_solution(request.FILES['f'], problem_id, request.session['user'], \
+                l_grade, h_grade, error = handle_solution(request.FILES['f'], problem_id, request.session['user'],
                                                           form.cleaned_data['prog_lang'].name.strip())
                 out_time = get_solutions_and_times(request.session['user'], problem_id)
-                return render(request, 'problem/detail.html', {'problem': problem, 'form': form, 'user': request.session['user'], \
-                                                               'grade': h_grade, 'l_grade': l_grade, 'error': error, \
+                return render(request, 'problem/detail.html', {'problem': problem, 'form': form, 'user': request.session['user'],
+                                                               'grade': h_grade, 'l_grade': l_grade, 'error': error,
                                                                'out_time': out_time})
             else:
                 return HttpResponse("Please login")
     else:
         form = UploadSolutionForm()
 
-    return render(request, 'problem/detail.html', {'problem': problem, 'form': form, 'user': request.session['user'], \
-                                                   'grade': h_grade, 'l_grade': l_grade, 'error': -1, \
+    return render(request, 'problem/detail.html', {'problem': problem, 'form': form, 'user': request.session['user'],
+                                                   'grade': h_grade, 'l_grade': l_grade, 'error': -1,
                                                    'out_time': out_time})
 
