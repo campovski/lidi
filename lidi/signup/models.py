@@ -33,6 +33,7 @@ class User(models.Model):
     programming_language = models.ForeignKey(ProgrammingLanguage, null=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    is_banned = models.BooleanField(default=False)
     conf_link = models.CharField(max_length=200, default="")
     container_id = models.CharField(max_length=12, null=True)
 

@@ -10,7 +10,7 @@ class Problem(models.Model):
     desc = models.CharField(max_length=6000)
     difficulty = models.IntegerField()
     submitted_by = models.ForeignKey(signup.models.User, related_name='submitted_by')
-    submitted_on = models.DateField()
+    submitted_on = models.CharField(max_length=10, default='{0}-{1}-{2}'.format(date.today().year, date.today().month, date.today().day))
     solved_by_how_many = models.IntegerField(default=0)
     first_solved_by = models.ForeignKey(signup.models.User, related_name='first_solved_by', null=True)
     first_solved_on = models.DateField(null=True)

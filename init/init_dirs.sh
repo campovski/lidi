@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$#" -lt 2 ]; then
-    echo "Call script like 'source init/init_dirs.sh install_compilers to host? add_to_bashrc?"
+    echo "Call script like 'source init/init_dirs.sh install_compilers_to_host? add_to_bashrc_and_cron?"
     return 1
 fi;
 
@@ -35,11 +35,10 @@ if [ "$1" == "1" ]; then
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
     echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
     sudo apt update;
-
 fi;
 
-# Install docker
-sudo apt install -y docker;
+# Install docker and add yourself to docker group
+sudo apt install -y docker && sudo usermod -a -G docker $(whoami);
 
 # Build docker image
 cd init/
@@ -89,3 +88,8 @@ python manage.py populate_languages
 python manage.py populate_proglang
 deactivate
 cd ..
+
+if [ "$2" == "1" ]; then
+    # Add crontab job to close all running containers daily at 00:05.
+    (crontab -u $(whoami) -l; echo "05 00 * * * bash ${PWD}/init/stop_containers.sh") | crontab -;
+fi;
