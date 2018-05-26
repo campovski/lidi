@@ -7,16 +7,10 @@ problem=$2;
 filename=${problem}_${user};
 problem_dir=$CG_FILES_UPLOADED/$user/$problem;
 
-for i in 0 1 2 3 4 5 6 7 8 9
-do
-    cmd_to_exec="{ time mono /lidi_files/prog/${filename}.exe < /lidi_files/testcases/${problem}_${i}; } 2>> /lidi_files/out/time;";
-	docker exec -t lidi_container_${user} /bin/bash -c "${cmd_to_exec}" > ${problem_dir}/out_${filename}_${i};
-	errors[$i]=$?;
-	dos2unix ${problem_dir}/out_${filename}_${i};
-done;
+limit_t=$(cat $CG_FILES_PROBLEMS/$problem/limit_t);
+limit_m=$(cat $CG_FILES_PROBLEMS/$problem/limit_m);
 
-# Copy time file to host.
-docker cp lidi_container_${user}:/lidi_files/out/time $problem_dir/time;
+cmd_to_exec="/usr/local/bin/timeout -t ${limit_t} -m ${limit_m} bash /lidi_files/runners/run_cs.sh ${1} ${2} 2> /lidi_files/out/timeout;";
+docker exec -t lidi_container_${user} /bin/bash -c "${cmd_to_exec}";
 
-echo ${errors[*]} > $problem_dir/errors;
 exit 0;

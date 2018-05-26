@@ -24,7 +24,6 @@ def handle_solution(f, problem_id, user, lang):
         :return error: -1 if no errors, otherwise output of agrader.sh
     """
 
-    print user
     # Get directory where files are stored.
     directory = os.popen('echo $CG_FILES_UPLOADED').read().strip()
 
@@ -48,36 +47,36 @@ def handle_solution(f, problem_id, user, lang):
     runner_ret_val = -1
     grade = -1
     error = -1
-    limit_t = int(os.popen('cat $CG_FILES_PROBLEMS/{}/limit_t'.format(problem_id)).read().strip())
     compiler_output = \
-    subprocess.check_output('bash problem/grader/compile_and_copy.sh {0} {1} {2}'.format(f_local, problem_id, user), shell=True).split('\n')[-2]
+        subprocess.check_output('bash problem/grader/compile_and_copy.sh {0} {1} {2}'.format(f_local, problem_id, user),
+                                shell=True).split('\n')[-2]
     if compiler_output == 'OK':
         if end == 'py':
             if lang == 'Python 2':
-                runner_ret_val = subprocess.call(
-                    'timeout {2} bash problem/grader/run_py.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+                runner_ret_val = subprocess.call('bash problem/grader/run_py.sh {0} {1}'.format(user, problem_id),
+                                                 shell=True)
             elif lang == 'Python 3':
-                runner_ret_val = subprocess.call(
-                    'timeout {2} bash problem/grader/run_py3.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+                runner_ret_val = subprocess.call('bash problem/grader/run_py3.sh {0} {1}'.format(user, problem_id),
+                                                 shell=True)
         elif end == 'java':
-            runner_ret_val = subprocess.call(
-                'timeout {2} bash problem/grader/run_java.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+            runner_ret_val = subprocess.call('bash problem/grader/run_java.sh {0} {1}'.format(user, problem_id),
+                                             shell=True)
         elif end == 'cs':
-            runner_ret_val = subprocess.call(
-                'timeout {2} bash problem/grader/run_cs.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+            runner_ret_val = subprocess.call('bash problem/grader/run_cs.sh {0} {1}'.format(user, problem_id),
+                                             shell=True)
         else:
-            runner_ret_val = subprocess.call(
-                'timeout {2} bash problem/grader/run_c.sh {0} {1}'.format(user, problem_id, limit_t), shell=True)
+            runner_ret_val = subprocess.call('bash problem/grader/run_c.sh {0} {1}'.format(user, problem_id), shell=True)
 
         if runner_ret_val == 0:
+            grader_out = subprocess.check_output('bash problem/grader/grade.sh {0} {1}'.format(user, problem_id),
+                                                 shell=True).split('\n')[-2]
             try:
-                grade = int(subprocess.check_output('bash problem/grader/grade.sh {0} {1}'.format(user, problem_id),
-                                                    shell=True).split('\n')[-2])
+                grade = int(grader_out)
             except ValueError:
                 grade = -1
-                error = "RTE"
+                error = grader_out
         else:
-            error = "TLE"
+            error = "RTE"
 
     else:
         error = compiler_output
