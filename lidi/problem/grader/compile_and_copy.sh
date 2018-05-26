@@ -14,6 +14,8 @@ problem_dir=$CG_FILES_UPLOADED/$user/$problem;
 limit_m=$(cat $CG_FILES_PROBLEMS/$problem/limit_m);
 limit_t=$(cat $CG_FILES_PROBLEMS/$problem/limit_t);
 
+rm $problem_dir/last_out/*;
+
 # Start user's docker container and copy testcases into it.
 docker start lidi_container_${user};
 docker cp $CG_FILES_TESTCASES/$problem/. lidi_container_${user}:/lidi_files/testcases/;

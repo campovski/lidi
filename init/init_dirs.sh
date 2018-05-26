@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$#" -lt 2 ]; then
-    echo "Call script like 'source init/init_dirs.sh install_compilers_to_host? add_to_bashrc_and_cron?"
+    echo "Call script like 'source init/init_dirs.sh install_compilers_to_host? add_to_bashrc? add_crontab_jobs?"
     return 1
 fi;
 
@@ -89,7 +89,12 @@ python manage.py populate_proglang
 deactivate
 cd ..
 
-if [ "$2" == "1" ]; then
+if [ "$3" == "1" ]; then
     # Add crontab job to close all running containers daily at 00:05.
     (crontab -u $(whoami) -l; echo "05 00 * * * bash ${PWD}/init/stop_containers.sh") | crontab -;
+
+    # Add crontab job for user postgres to backup database every day.
+    sudo su - postgres;
+    (crontab -u postgres -l; echo "05 03 * * * pg_dump lidi_db > lidi_db_bak.sql") | crontab -;
+    logout;
 fi;

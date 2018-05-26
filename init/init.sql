@@ -6,4 +6,6 @@ CREATE DATABASE lidi_db ENCODING 'UTF8';
 CREATE ROLE admin_lidi;
 ALTER ROLE admin_lidi WITH PASSWORD 'testpwd1';
 GRANT ALL PRIVILEGES ON DATABASE lidi_db TO admin_lidi;
+GRANT USAGE ON SCHEMA public TO admin_lidi;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO admin_lidi;
 ALTER ROLE admin_lidi WITH LOGIN;
