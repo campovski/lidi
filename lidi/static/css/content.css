@@ -130,14 +130,18 @@ tr:hover {
     outline: none;
 }
 
-#submit_solution {
+#submit_solution, input[type=submit], input[type=reset], input[type=button] {
 	margin-top: 4px;
 	background-color: #fff496;
-	padding: 10px 0;
+	padding: 4px 0;
 	width: 100%;
 	text-decoration: none;
 	color: black;
 	cursor: pointer;
+}
+
+#submit_solution {
+    padding: 10px 0 !important;
 }
 
 #notify-signin {
