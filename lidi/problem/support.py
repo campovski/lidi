@@ -132,13 +132,8 @@ def get_solutions_and_times(username, problem_id):
         running time of last and best submission.
         :param username: username of user whose data we want to get
         :param problem_id: id of problem for which we want to get data
-        :return -1 if some IOError occured
-        :return last_outputs: output of last submission
-        :return best_outputs: output of best submission
-        :return program: the source code of submission
-        :return [last_times, best_times]: array of running times on testcases of last and best submission
+        :return: data about submissions
     """
-
     problem_dir = '{0}/{1}/{2}'.format(os.popen('echo $CG_FILES_UPLOADED').read().strip(), username, problem_id)
 
     last_outputs = get_last_outputs(problem_dir, problem_id, username)
@@ -147,7 +142,10 @@ def get_solutions_and_times(username, problem_id):
     best_times = get_times('{}/best_out/time'.format(problem_dir))
     program = get_program('{}/prog/'.format(problem_dir))
 
-    return last_outputs, best_outputs, program, [last_times, best_times]
+    last_outs = zip(last_outputs, last_times) if last_outputs != -1 or last_times != -1 else -1
+    best_outs = zip(best_outputs, best_times) if best_outputs != -1 or best_times != -1 else -1
+
+    return last_outs, best_outs, program
 
 
 def get_last_outputs(problem_dir, problem, user):
@@ -220,15 +218,15 @@ def get_program(dir_program):
     """
 
     f_program = os.path.join(dir_program, os.popen('ls {}'.format(dir_program)).read().strip())
-    program = []
+    program = ""
     try:
         f = open(f_program)
         for line in f:
-            program.append(line)
+            program += line
         f.close()
     except IOError:
         return -1
-    return program
+    return program.replace('\t', ' '*4)
 
 
 def rewrite_times(f_times):

@@ -8,6 +8,8 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/highlight/default.css' %}">
+    <script src="{% static 'js/highlight.pack.js' %}"></script>
 </head>
 <body>
 	<div id="header">
@@ -43,85 +45,96 @@
 				<form enctype="multipart/form-data" method="POST">
 					{% csrf_token %}
 					{{ form }}
-<!--					<div class="g-recaptcha" data-sitekey="6LdXGyQUAAAAAB8JUpnvNLFJv0b36ygtg5Z1OrE3"></div>-->
-					<input type="submit" value="Submit">
+					<div class="g-recaptcha" data-sitekey="6LdXGyQUAAAAAB8JUpnvNLFJv0b36ygtg5Z1OrE3"></div>
+					<input type="submit" value="Submit" id="submit_solution">
 				</form>
 			</div>
-			{% if grade != -1 %}
-				<div id="highest_grade">
-					<p>Your highest grade: <b>{{ grade }}</b></p>
-				</div>
-			{% endif %}
-			{% if l_grade != -1 and error == -1 %}
-				<div id="last_grade">
-					<p>You scored: <b>{{ l_grade }}</b></p>
-				</div>
-			{% elif error != -1 %}
-				<div id="last_grade">
-					<p class="error">Error: {{ error }}</p>
-				</div>
-			{% endif %}
-			{% if out_time.0 != -1 %}
-				<div id='last_out'>
-					Last out:
-					<ul>
-					{% for out in out_time.0 %}
-						<li>
-						    {% for line in out %}
-							{{ line }}
-						    {% endfor %}
-						</li>	
-					{% endfor %}
-                    </ul>
-				</div>
-            {% endif %}
-            {% if out_time.1 != -1 %}
-				<div id='best_out'>
-					Best out:
-                    <ul>
-                    {% for out in out_time.1 %}
-                        <li>
-                            {% for line in out %}
-                                {{ line }}
-                            {% endfor %}
-                        </li>
-                    {% endfor %}
-					</ul>
-				</div>
-            {% endif %}
-            {% if out_time.2 != -1 %}
-				<div id='program'>
-					{{ out_time.2 }}
-				</div>
-            {% endif %}
-            {% if out_time.3.0 != -1 or out_time.3.1 != -1 %}
-				<div id='times'>
-                    {% if out_time.3.0 != -1 %}
-					    <div class="times">
-                            Last times:
-                            <ul>
-                            {% for time in out_time.3.0 %}
-                                <li>
-                                    {{ time }}
-                                </li>
-                            {% endfor %}
-                            </ul>
+
+            {% if grade != -1 or l_grade != -1 or error != -1 %}
+                <div id="submission">
+                    <div id="parent_grades">
+                        {% if grade != -1 %}
+                            <div id="highest_grade" class="div_grade">
+                                <p>Your highest grade: <b>{{ grade }}</b></p>
+                            </div>
+                        {% endif %}
+                        {% if l_grade != -1 and error == -1 %}
+                            <div class="div_grade last_{{ l_grade }}">
+                                <p>You scored: <b>{{ l_grade }}</b></p>
+                            </div>
+                        {% elif error != -1 %}
+                            <div class="div_grade error">
+                                <p>Error: {{ error }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if out_time.0 != -1 or out_time.1 != -1 %}
+                        <div id="parent_outputs">
+                            {% if out_time.0 != -1 %}
+                                <div class="outputs">
+                                    <h3>Last out</h3>
+                                    <table class="table_outs">
+                                        <tr>
+                                            <th class="id">#</th>
+                                            <th class="time">Time</th>
+                                            <th class="outs">Output</th>
+                                        </tr>
+                                        {% for out in out_time.0 %}
+                                            <tr>
+                                                <td class="id">
+                                                    {{ forloop.counter }}
+                                                </td>
+                                                <td class="time">
+                                                    {{ out.1 }}
+                                                </td>
+                                                <td class="outs">
+                                                    {% for line in out.0 %}
+                                                        {{ line }}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            {% endif %}
+                            {% if out_time.1 != -1 %}
+                                <div class="outputs">
+                                    <h3>Best out</h3>
+                                    <table class="table_outs">
+                                        <tr>
+                                            <th class="id">#</th>
+                                            <th class="time">Time</th>
+                                            <th class="outs">Output</th>
+                                        </tr>
+                                        {% for out in out_time.1 %}
+                                            <tr>
+                                                <td class="id">
+                                                    {{ forloop.counter }}
+                                                </td>
+                                                <td class="time">
+                                                    {{ out.1 }}
+                                                </td>
+                                                <td class="outs">
+                                                    {% for line in out.0 %}
+                                                        {{ line }}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            {% endif %}
+                            <div style="clear: both;"></div>
                         </div>
                     {% endif %}
-                    {% if out_time.3.1 != -1 %}
-                        <div class="times">
-                            Best times:
-                            <ul>
-                            {% for time in out_time.3.1 %}
-                                <li>
-                                    {{ time }}
-                                </li>
-                            {% endfor %}
-					        </ul>
+                    {% if out_time.2 != -1 %}
+                        <div id="program" class="outputs">
+                            <h3>Your last submission</h3>
+                            <pre><code><span class="pre_span">{{ out_time.2 }}</span></code></pre>
                         </div>
-					{% endif %}
-				</div>
-			{% endif %}
+                    {% endif %}
+                </div>
+            {% endif %}
 		{% else %}
 			<div id="notify-signin">
 				Sign in to upload your solution.
@@ -130,6 +143,6 @@
 	</div>
 </body>
 
-
+<script>hljs.initHighlightingOnLoad();</script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 </html>

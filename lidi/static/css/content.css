@@ -63,7 +63,7 @@ th {
 	font-style: bold;
 }
 
-td.id {
+td.id, th.id {
 	text-align: center;
 	width: 20px;
 }
@@ -121,20 +121,19 @@ tr:hover {
 
 #upload select {
 	width: 100%;
-        padding: 5px 10px;
-        margin: 8px 0;
-        box-sizing: border-box;
-        border: 2px solid #ccc;
-        -webkit-transition: 0.3s;
-        transition: 0.3s;
-        outline: none;
-
+    padding: 5px 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    outline: none;
 }
 
-input[type=submit], input[type=reset], input[type=button] {
+#submit_solution {
 	margin-top: 4px;
 	background-color: #fff496;
-	padding: 4px 0;
+	padding: 10px 0;
 	width: 100%;
 	text-decoration: none;
 	color: black;
@@ -147,7 +146,114 @@ input[type=submit], input[type=reset], input[type=button] {
 	width: 100%;
 }
 
+/*--- STYLE FOR PROBLEM DETAIL - SUBMISSION --*/
+#submission {
+    width: 80%;
+    margin: 30px auto;
+}
 
+#parent_grades {
+    max-width: 250px;
+    margin: 10px auto 30px auto;
+    text-align: center;
+}
+
+.div_grade{
+    padding: 10px 0;
+}
+
+#highest_grade {
+    background-color: #ededed;
+}
+
+.last_0 {
+    background-color: #ff0000;
+    text-color: #000000;
+}
+
+.last_1 {
+    background-color: #ff4800;
+    text-color: #000000;
+}
+
+.last_2 {
+    background-color: #ff5000;
+    text-color: #000000;
+}
+
+.last_3 {
+    background-color: #ff7700;
+    text-color: #000000;
+}
+
+.last_4 {
+    background-color: #ffa100;
+    text-color: #000000;
+}
+
+.last_5 {
+    background-color: #ffd400;
+    text-color: #000000;
+}
+
+.last_6 {
+    background-color: #fffa00;
+    text-color: #000000;
+}
+
+.last_7 {
+    background-color: #ccff00;
+    text-color: #000000;
+}
+
+.last_8 {
+    background-color: #a5ff00;
+    text-color: #000000;
+}
+
+.last_9 {
+    background-color: #88ff00;
+    text-color: #000000;
+}
+
+.last_10 {
+    background-color: #59ff00;
+    text-color: #000000;
+}
+
+div.error {
+    background-color: #f20e0e;
+    text-color: #ffffff;
+}
+
+#parent_outputs {
+    width: 100%;
+}
+
+.outputs {
+    width: 100%;
+    border: solid #000;
+    border-width: 2px;
+    margin: 0 auto 20px auto;
+    padding: 10px 15px;
+}
+
+td.time {
+    width: 50px;
+}
+
+.table_outs {
+    width: 100% !important;
+    margin: 6px 0;
+}
+
+td.outs, th.outs {
+    padding-left: 30px;
+}
+
+.pre_span {
+    font-size: 16px;
+}
 
 /*--- STYLE FOR LOGIN --*/
 
