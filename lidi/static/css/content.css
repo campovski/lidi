@@ -242,8 +242,9 @@ div.error {
     padding: 10px 15px;
 }
 
-td.time {
+td.time, th.time {
     width: 50px;
+    text-align: right;
 }
 
 .table_outs {

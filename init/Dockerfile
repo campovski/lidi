@@ -32,4 +32,7 @@ COPY docker_runners/docker_run_java.sh /lidi_files/runners/run_java.sh
 COPY docker_runners/docker_run_py.sh /lidi_files/runners/run_py.sh
 COPY docker_runners/docker_run_py3.sh /lidi_files/runners/run_py3.sh
 
+COPY time.sh /bin/mytime
+RUN chmod +x /bin/mytime
+
 CMD ["/bin/bash"]

@@ -81,9 +81,6 @@ def handle_solution(f, problem_id, user, lang):
     else:
         error = compiler_output
 
-    if grade != -1:
-        rewrite_times('{0}/time'.format(problem_dir))
-
     # Add submission
     user = User.objects.get(username=user)
     today = date.today()
@@ -203,7 +200,14 @@ def get_times(f_times):
     try:
         f = open(f_times)
         for line in f:
-            times.append(line)
+            line = int(line)
+            if line > 10000:
+                line_transformed = '{0}.{1}s'.format(line/10000, (line/1000) % 10)
+            elif line > 1000:
+                line_transformed = '{}ms'.format(line/1000)
+            else:
+                line_transformed = '{0}.{1}ms'.format(line/10, line % 10)
+            times.append(line_transformed)
         f.close()
     except IOError:
         return -1
@@ -227,24 +231,3 @@ def get_program(dir_program):
     except IOError:
         return -1
     return program.replace('\t', ' '*4)
-
-
-def rewrite_times(f_times):
-    """
-        Function rewrites the file that stores times. Grader writes there the output
-        of unix time function and we need to get the actual time.
-        :param f_times: file which we need to rewrite
-    """
-
-    f = open(f_times)
-    pattern = re.compile(r'(?<=real\t)\d+m\d+.\d\d\ds')
-    times = ''
-    for line in f:
-        tmp = pattern.search(line)
-        if tmp is not None:
-            times += '{0}\n'.format(tmp.group())
-    f.close()
-
-    f = open(f_times, 'w')
-    f.write(times)
-    f.close()
