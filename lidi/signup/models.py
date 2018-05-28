@@ -10,6 +10,13 @@ class Country(models.Model):
         return self.name
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 class Language(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -36,6 +43,7 @@ class User(models.Model):
     is_banned = models.BooleanField(default=False)
     conf_link = models.CharField(max_length=200, default="")
     container_id = models.CharField(max_length=12, null=True)
+    category = models.ForeignKey(Category, null=False, default=1)
 
     def __str__(self):
         return self.username

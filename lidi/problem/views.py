@@ -76,7 +76,8 @@ def detail(request, problem_id):
 
     # Get possible data about user's previous submissions.
     try:
-        user_id = User.objects.get(username=request.session['user']).id
+        user = User.objects.get(username=request.session['user'])
+        user_id = user.id
         submission = Submission.objects.get(user=user_id, problem=problem_id)
         h_grade = submission.grade
         out_time = get_solutions_and_times(request.session['user'], problem_id)
@@ -84,6 +85,11 @@ def detail(request, problem_id):
         request.session['user'] = None
     except ObjectDoesNotExist:  # if no submissions, do nothing
         pass
+    finally:
+        if user:
+            request.session['user_category'] = user.category_id
+        else:
+            request.session['user_category'] = None
 
     # If user submitted the program, we need to handle that.
     if request.method == 'POST':
@@ -95,7 +101,8 @@ def detail(request, problem_id):
                 out_time = get_solutions_and_times(request.session['user'], problem_id)
                 return render(request, 'problem/detail.html', {'problem': problem, 'form': form, 'user': request.session['user'],
                                                                'grade': h_grade, 'l_grade': l_grade, 'error': error,
-                                                               'out_time': out_time})
+                                                               'out_time': out_time,
+                                                               'user_category': request.session['user_category']})
             else:
                 return HttpResponse("Please login")
     else:
@@ -103,5 +110,6 @@ def detail(request, problem_id):
 
     return render(request, 'problem/detail.html', {'problem': problem, 'form': form, 'user': request.session['user'],
                                                    'grade': h_grade, 'l_grade': l_grade, 'error': -1,
-                                                   'out_time': out_time})
+                                                   'out_time': out_time,
+                                                   'user_category': request.session['user_category']})
 

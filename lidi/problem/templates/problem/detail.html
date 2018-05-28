@@ -68,70 +68,93 @@
                             </div>
                         {% endif %}
                     </div>
-                    {% if out_time.0 != -1 or out_time.1 != -1 %}
-                        <div id="parent_outputs">
-                            {% if out_time.0 != -1 %}
-                                <div class="outputs">
-                                    <h3>Last out</h3>
-                                    <table class="table_outs">
-                                        <tr>
-                                            <th class="id">#</th>
-                                            <th class="time">Time</th>
-                                            <th class="outs">Output</th>
-                                        </tr>
-                                        {% for out in out_time.0 %}
+                    {% if user_category == 1 %}
+                        {% if out_time.0 != -1 or out_time.1 != -1 %}
+                            <div id="parent_outputs">
+                                {% if out_time.0 != -1 %}
+                                    <div class="outputs">
+                                        <h3>Last out</h3>
+                                        <table class="table_outs">
                                             <tr>
-                                                <td class="id">
-                                                    {{ forloop.counter }}
-                                                </td>
-                                                <td class="time">
-                                                    {{ out.1 }}
-                                                </td>
-                                                <td class="outs">
-                                                    {% for line in out.0 %}
-                                                        {{ line }}
-                                                    {% endfor %}
-                                                </td>
+                                                <th class="id">#</th>
+                                                <th class="time">Time</th>
+                                                <th class="outs">Output</th>
                                             </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            {% endif %}
-                            {% if out_time.1 != -1 %}
-                                <div class="outputs">
-                                    <h3>Best out</h3>
-                                    <table class="table_outs">
-                                        <tr>
-                                            <th class="id">#</th>
-                                            <th class="time">Time</th>
-                                            <th class="outs">Output</th>
-                                        </tr>
-                                        {% for out in out_time.1 %}
+                                            {% for out in out_time.0 %}
+                                                <tr>
+                                                    <td class="id">
+                                                        {{ forloop.counter }}
+                                                    </td>
+                                                    <td class="time">
+                                                        {{ out.1 }}
+                                                    </td>
+                                                    <td class="outs">
+                                                        <pre><code><span class="pre_span">{{ out.0 }}</span></code></pre>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                {% endif %}
+                                {% if out_time.1 != -1 %}
+                                    <div class="outputs">
+                                        <h3>Best out</h3>
+                                        <table class="table_outs">
                                             <tr>
-                                                <td class="id">
-                                                    {{ forloop.counter }}
-                                                </td>
-                                                <td class="time">
-                                                    {{ out.1 }}
-                                                </td>
-                                                <td class="outs">
-                                                    {% for line in out.0 %}
-                                                        {{ line }}
-                                                    {% endfor %}
-                                                </td>
+                                                <th class="id">#</th>
+                                                <th class="time">Time</th>
+                                                <th class="outs">Output</th>
                                             </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            {% endif %}
-                            <div style="clear: both;"></div>
-                        </div>
-                    {% endif %}
-                    {% if out_time.2 != -1 %}
-                        <div id="program" class="outputs">
-                            <h3>Your last submission</h3>
-                            <pre><code><span class="pre_span">{{ out_time.2 }}</span></code></pre>
-                        </div>
+                                            {% for out in out_time.1 %}
+                                                <tr>
+                                                    <td class="id">
+                                                        {{ forloop.counter }}
+                                                    </td>
+                                                    <td class="time">
+                                                        {{ out.1 }}
+                                                    </td>
+                                                    <td class="outs">
+                                                        <pre><code><span class="pre_span">{{ out.0 }}</span></code></pre>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                {% endif %}
+                                <div style="clear: both;"></div>
+                            </div>
+                        {% endif %}
+                        {% if out_time.3 != -1 %}
+                            <div class="outputs">
+                                <h3>Testcases</h3>
+                                <table class="table_outs">
+                                    <tr>
+                                        <th class="id">#</th>
+                                        <th class="ins">Testcase</th>
+                                        <th class="outs">Solution</th>
+                                    </tr>
+                                    {% for out in out_time.3 %}
+                                        <tr>
+                                            <td class="id">
+                                                {{ forloop.counter }}
+                                            </td>
+                                            <td class="ins">
+                                                <pre><code><span class="pre_span">{{ out.0 }}</span></code></pre>
+                                            </td>
+                                            <td class="outs">
+                                                <pre><code><span class="pre_span">{{ out.1 }}</span></code></pre>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        {% endif %}
+                        {% if out_time.2 != -1 %}
+                            <div id="program" class="outputs">
+                                <h3>Your last submission</h3>
+                                <pre><code><span class="pre_span">{{ out_time.2 }}</span></code></pre>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             {% endif %}

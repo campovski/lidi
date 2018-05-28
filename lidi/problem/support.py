@@ -1,6 +1,5 @@
 import os
 import subprocess
-import re
 from datetime import date
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -129,7 +128,7 @@ def get_solutions_and_times(username, problem_id):
         running time of last and best submission.
         :param username: username of user whose data we want to get
         :param problem_id: id of problem for which we want to get data
-        :return: data about submissions
+        :return: data about submissions and testcases
     """
     problem_dir = '{0}/{1}/{2}'.format(os.popen('echo $CG_FILES_UPLOADED').read().strip(), username, problem_id)
 
@@ -138,11 +137,13 @@ def get_solutions_and_times(username, problem_id):
     last_times = get_times('{}/last_out/time'.format(problem_dir))
     best_times = get_times('{}/best_out/time'.format(problem_dir))
     program = get_program('{}/prog/'.format(problem_dir))
+    testcases, testcases_sol = get_testcases(problem_id)
 
     last_outs = zip(last_outputs, last_times) if last_outputs != -1 or last_times != -1 else -1
     best_outs = zip(best_outputs, best_times) if best_outputs != -1 or best_times != -1 else -1
+    testcases = zip(testcases, testcases_sol) if testcases != -1 else -1
 
-    return last_outs, best_outs, program
+    return last_outs, best_outs, program, testcases
 
 
 def get_last_outputs(problem_dir, problem, user):
@@ -157,10 +158,10 @@ def get_last_outputs(problem_dir, problem, user):
     outputs = []
     try:
         for i in range(10):
-            outputs.append([])
+            outputs.append('')
             f = open('{0}/last_out/out_{1}_{2}_{3}'.format(problem_dir, problem, user, i))
             for line in f:
-                outputs[i].append(line.strip())
+                outputs[i] += line.strip()
             f.close()
     except IOError:
         return -1
@@ -179,10 +180,10 @@ def get_best_outputs(problem_dir, problem, user):
     outputs = []
     try:
         for i in range(10):
-            outputs.append([])
+            outputs.append('')
             f = open('{0}/best_out/out_{1}_{2}_{3}'.format(problem_dir, problem, user, i))
             for line in f:
-                outputs[i].append(line.strip())
+                outputs[i] += line.strip()
             f.close()
     except IOError:
         return -1
@@ -222,7 +223,7 @@ def get_program(dir_program):
     """
 
     f_program = os.path.join(dir_program, os.popen('ls {}'.format(dir_program)).read().strip())
-    program = ""
+    program = ''
     try:
         f = open(f_program)
         for line in f:
@@ -231,3 +232,32 @@ def get_program(dir_program):
     except IOError:
         return -1
     return program.replace('\t', ' '*4)
+
+
+def get_testcases(problem):
+    """
+    Gets testcases for problem, which are then displayed if user is Apprentice.
+        :param problem: id of problem
+        :return: array of testcases
+    """
+
+    testcases_dir = os.path.join(os.popen('echo $CG_FILES_TESTCASES').read().strip(), problem)
+    testcases_dir_sol = os.path.join(os.popen('echo $CG_FILES_TESTCASES_SOL').read().strip(), problem)
+    testcases = []
+    testcases_sol = []
+    try:
+        for i in range(10):
+            testcases.append('')
+            f = open(os.path.join(testcases_dir, '{0}_{1}'.format(problem, i)))
+            for line in f:
+                testcases[i] += line.strip()
+            f.close()
+
+            testcases_sol.append('')
+            f = open(os.path.join(testcases_dir_sol, '{0}_{1}'.format(problem, i)))
+            for line in f:
+                testcases_sol[i] += line.strip()
+            f.close()
+    except IOError:
+        return -1, -1  # should not be here
+    return testcases, testcases_sol
