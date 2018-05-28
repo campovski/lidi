@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from .forms import LoginForm
-from .support import validate_login
+from .forms import LoginForm, PasswordResetEmailForm, PasswordResetChangePasswordForm
+from .support import validate_login, send_reset_password, validate_reset_link, reset_pwd
 from lidi.settings import BASE_HTTP_ADDRESS
 
 
@@ -45,3 +45,45 @@ def logout(request):
 
     request.session['user'] = None
     return redirect(BASE_HTTP_ADDRESS)
+
+
+def reset_password(request, conf_link=None):
+    """
+        If conf_link is None, serve page where user can reset password.
+        If conf_link is set, provide the possibility to enter new password.
+        :param request
+        :param conf_link: if present, user has clicked the link, else default page
+    """
+    print conf_link is None
+    print conf_link
+    # User has to enter email or username.
+    if conf_link is None:
+        if request.method == 'POST':
+            form = PasswordResetEmailForm(request.POST)
+            if form.is_valid():
+                if send_reset_password(form.cleaned_data['user']):
+                    return HttpResponse('Check your email for password reset link')
+                else:
+                    return HttpResponse('Oops, something went wrong, please try again')
+        else:
+            form = PasswordResetEmailForm()
+        return render(request, 'login/reset_index.html', {'form': form})
+
+    # User has clicked on a reset password link in email.
+    if validate_reset_link(conf_link):
+        if request.method == 'POST':
+            form = PasswordResetChangePasswordForm(request.POST)
+            if form.is_valid():
+                if form.cleaned_data['password1'] == form.cleaned_data['password2']:
+                    if reset_pwd(form.cleaned_data['username'], form.cleaned_data['password1'], conf_link):
+                        return HttpResponse('Password has been reset')
+                    else:
+                        return render(request, 'login/reset_index.html', {'form': form, 'error': 2})
+                else:
+                    return render(request, 'login/reset_index.html', {'form': form, 'error': 1})
+        else:
+            form = PasswordResetChangePasswordForm()
+        return render(request, 'login/reset_index.html', {'form': form, 'error': 0})
+
+    # Wrong conf_link.
+    return HttpResponse('Wrong reset password link')

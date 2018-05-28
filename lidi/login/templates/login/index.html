@@ -23,6 +23,8 @@
 					{% csrf_token %}
 					{{ form }}
 					<input type="submit" value="Login">
+                    <input type="button" value="Forgot password?" onclick="location.href = '{% url 'login:reset_password' %}';">
+                    <input type="button" value="Sign up" onclick="location.href = '{% url 'signup:index' %}';">
 					<input type="button" value="Home" onclick="location.href = '{% url 'home:index' %}';">
 				</form>
 				{% if not valid %}

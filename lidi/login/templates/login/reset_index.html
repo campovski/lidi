@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lidi -- Reset Password</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
+</head>
+
+<body>
+    <div id="page">
+        <div id="login_logo">
+            <h1>LIDI</h1>
+            <p>RESET PASSWORD</p>
+        </div>
+
+		<div id="content">
+            <div id="login_form">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Confirm">
+                    <input type="button" value="Home" onclick="location.href = '{% url 'home:index' %}';">
+                </form>
+                {% if error == 1 %}
+                    <p class="error">Passwords do not match.</p>
+                {% elif error == 2 %}
+                    <p class="error">Wrong username for given confirmation link.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
