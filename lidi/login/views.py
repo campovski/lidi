@@ -54,8 +54,7 @@ def reset_password(request, conf_link=None):
         :param request
         :param conf_link: if present, user has clicked the link, else default page
     """
-    print conf_link is None
-    print conf_link
+
     # User has to enter email or username.
     if conf_link is None:
         if request.method == 'POST':

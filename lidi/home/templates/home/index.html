@@ -3,32 +3,32 @@
 {% load static %}
 
 <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial scale=1">
-        <title>LIDI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial scale=1">
+    <title>LIDI</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/html.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/content.css' %}" />
 </head>
 <body>
-        <div id="header">
-		<div id="header-inner">
-			<nav>
-		                <ul>
-        		                <li id="current"><a href="{% url 'home:index' %}">Home</a></li>
-                		        <li><a href="{% url 'problem:index' %}">Problems</a></li>
-                        		<li><a href="">Statistics</a></li>
-					{% if user != None %}
-						<li><a href="{% url 'upload:upload' %}">Upload</a></li>
-	        	                        <li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
-        	        	        {% else %}
-                	        	        <li><a href="{% url 'login:index' %}">Login</a></li>
-                        	        	<li><a href="{% url 'signup:index' %}">Sign Up</a></li>
-	                        	{% endif %}
-	        	        </ul>
-			</nav>
-		</div>
+    <div id="header">
+        <div id="header-inner">
+            <nav>
+                <ul>
+                    <li id="current"><a href="{% url 'home:index' %}">Home</a></li>
+                    <li><a href="{% url 'problem:index' %}">Problems</a></li>
+                    <li><a href="{% url 'statistics:index' %}">Statistics</a></li>
+                    {% if user != None %}
+                        <li><a href="{% url 'upload:upload' %}">Upload</a></li>
+                        <li><a href="{% url 'login:logout' %}">Logout ({{ user }})</a></li>
+                    {% else %}
+                            <li><a href="{% url 'login:index' %}">Login</a></li>
+                            <li><a href="{% url 'signup:index' %}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
+    </div>
 
 	<div id="page">
 		<div id="content">
