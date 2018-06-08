@@ -7,6 +7,7 @@ import json
 from django.core.mail import send_mail
 
 from .models import User
+from statistics.models import Rating
 from lidi.settings import BASE_HTTP_ADDRESS
 from lidi.local_settings import GOOGLE_RECAPTCHA_SECRET_KEY
 
@@ -81,6 +82,11 @@ def confirm_user(conf_link):
     container_id = os.popen('docker create -it --name lidi_container_{} --network none ubuntu:lidi'.format(usr.username)).read()
     usr.container_id = container_id[:12]
     usr.save()
+
+    # Initialize his rating.
+    rating = Rating()
+    rating.user = usr
+    rating.save()
 
     return 0
 
